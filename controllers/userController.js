@@ -17,7 +17,7 @@ function index(req, res) {
 }
 
 function getAll(req, res) {
-  User.findAll()
+  User.findAll({include: ['enrollments', 'comments']})
     .then((users) => {
       res.status(200).json({
         message: "Get all users successfully",

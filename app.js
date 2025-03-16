@@ -9,7 +9,7 @@ const userRouter = require('./routes/user');
 
 app.use(bodyParser.json());
 
-app.use('/user', userRouter);
+app.use('/api/user', userRouter);
 
 app.get('/', (req, res) => {
   res.send('vcl');
