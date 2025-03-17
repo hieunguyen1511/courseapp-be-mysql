@@ -1,3 +1,4 @@
+const Validator = require("fastest-validator");
 const { resource } = require("../app");
 const models = require("../models");
 
@@ -45,6 +46,24 @@ function register(req, res) {
         avatar: req.body.avatar,
         role: req.body.role,
       };
+      const schema = {
+        username : {type: 'string', required: true, max: 50},
+        password : {type: 'string', required: true},
+        fullname : {type: 'string', required: true, max: 50},
+        birth : {type: 'string', required: true},
+        phone : {type: 'string', required: true, max: 12},
+        email : {type: 'string', required: true},
+      }
+
+      const v = new Validator();
+      const validate = v.validate(user, schema);
+      if(validate !== true){
+        return res.status(400).json({
+          message: "Validation failed",
+          error: validate
+        });
+      }
+
       User.create(user)
         .then((result) => {
           res.status(201).json({
