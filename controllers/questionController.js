@@ -2,6 +2,15 @@ const Validator = require("fastest-validator");
 const { resource } = require("../app");
 const models = require("../models");
 
+
+
+const schema = {
+  lesson_id: { type: "number", integer: true, required: true },
+  content: { type: "string", min: 1 },
+  note: { type: "string", min: 1 },
+};
+
+
 function index(req, res) {
   const question = "câu hỏi";
   res.send("Hello " + question);
@@ -45,7 +54,17 @@ async function getById(req, res) {
 
 async function create(req, res) {
   try {
+    const v = new Validator();
+    const validationResponse = v.validate(req.body, schema);
+    if (validationResponse !== true) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: validationResponse,
+      });
+    }
+
     const { lesson_id, content, note } = req.body;
+
     const question = await models.Question.create({
       lesson_id,
       content,
@@ -64,6 +83,16 @@ async function create(req, res) {
 
 async function update(req, res) {
   try {
+
+    const v = new Validator();
+    const validationResponse = v.validate(req.body, schema);
+    if (validationResponse !== true) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: validationResponse,
+      });
+    }
+
     const { id } = req.params;
     const { lesson_id, content, note } = req.body;
 
@@ -71,6 +100,8 @@ async function update(req, res) {
     if (!question) {
       return res.status(404).json({ message: "Question not found" });
     }
+
+    
 
     await question.update({ lesson_id, content, note });
 
