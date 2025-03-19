@@ -21,7 +21,7 @@ const enrollmentRouter = require('./routes/enrollment');
 app.use(bodyParser.json());
 
 app.use('/api/user', userRouter);
-// app.use('/api/category',categoryRouter);
+app.use('/api/category',categoryRouter);
 // app.use('/api/course',courseRouter);
 // app.use('/api/section', sectionRouter);
 // app.use('/api/lesson', lessonRouter);
