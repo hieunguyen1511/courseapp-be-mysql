@@ -1,4 +1,7 @@
 'use strict';
+
+const { all } = require('../app');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -35,10 +38,12 @@ module.exports = {
         type: Sequelize.DOUBLE
       },
       rating: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
+        allowNull: true
       },
       review: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

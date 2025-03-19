@@ -28,7 +28,7 @@ app.use('/api/lesson', lessonRouter);
 app.use('/api/question',questionRouter);
 app.use('/api/answer', answerRouter);
 // app.use('/api/comment', commentRouter);
-// app.use('/api/enrollment', enrollmentRouter);
+app.use('/api/enrollment', enrollmentRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello .... from course app');
