@@ -2,120 +2,127 @@ const Validator = require("fastest-validator");
 const { resource } = require("../app");
 const models = require("../models");
 
-const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
 const Category = models.Category;
+const v = new Validator();
 
 function index(req, res) {
   const category = "chủ đề";
   res.send("Hello " + category);
 }
 
-// Lấy tất cả danh mục
-function getAll(req, res) {
-  Category.findAll()
-    .then((categories) => {
-      res.status(200).json({
-        message: "Get all categories successfully",
-        categories: categories,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Something went wrong",
-        error: error.message,
-      });
-    });
-}
+async function getAll(req, res) {
+  try {
+    const categories = await Category.findAll();
 
-// Lấy một danh mục theo ID
-function getById(req, res) {
-  const { id } = req.params;
-  Category.findByPk(id)
-    .then((category) => {
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
-      }
-      res.status(200).json(category);
-    })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Something went wrong",
-        error: error.message,
-      });
+    return res.status(200).json({
+      message: "Get all categories successfully",
+      categories,
     });
-}
-
-// Tạo danh mục mới
-function create(req, res) {
-  const { name } = req.body;
-  if (!name) {
-    return res.status(400).json({ message: "Name is required" });
+  } catch (error) {
+    console.error("Error getting all categories:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
   }
-
-  Category.create({ name })
-    .then((category) => {
-      res.status(201).json({
-        message: "Category created successfully",
-        category: category,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Something went wrong",
-        error: error.message,
-      });
-    });
 }
 
-// Cập nhật danh mục
-function update(req, res) {
-  const { id } = req.params;
-  const { name } = req.body;
 
-  Category.findByPk(id)
-    .then((category) => {
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
-      }
-      return category.update({ name });
-    })
-    .then((updatedCategory) => {
-      res.status(200).json({
-        message: "Category updated successfully",
-        category: updatedCategory,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Something went wrong",
-        error: error.message,
-      });
+async function getById(req, res) {
+  try {
+    const { id } = req.params;
+    
+    const category = await Category.findByPk(id);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    return res.status(200).json(category);
+  } catch (error) {
+    console.error("Error getting category by ID:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
     });
+  }
 }
 
-// Xóa danh mục
-function remove(req, res) {
-  const { id } = req.params;
+async function create(req, res) {
+  try {
+    const { name } = req.body;
 
-  Category.findByPk(id)
-    .then((category) => {
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
-      }
-      return category.destroy();
-    })
-    .then(() => {
-      res.status(200).json({ message: "Category deleted successfully" });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Something went wrong",
-        error: error.message,
-      });
+    const schema = {
+      name: { type: "string", min: 3, max: 50, required: true },
+    };
+    const validate = v.validate({ name }, schema);
+    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
+
+    const category = await Category.create({ name });
+
+    return res.status(201).json({
+      message: "Category created successfully",
+      category,
     });
+  } catch (error) {
+    console.error("Create error:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
 }
+
+async function update(req, res) {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const schema = {
+      name: { type: "string", min: 3, max: 50, required: true },
+    };
+    const validate = v.validate({ name }, schema);
+    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
+    
+    const category = await Category.findByPk(id);
+    if (!category) return res.status(404).json({ message: "Category not found" });
+
+    await category.update({ name });
+
+    return res.status(200).json({
+      message: "Category updated successfully",
+      category,
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+}
+
+async function remove(req, res) {
+  try {
+    const { id } = req.params;
+
+    const category = await Category.findByPk(id);
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    await category.destroy();
+
+    return res.status(200).json({ message: "Category deleted successfully" });
+  } catch (error) {
+    console.error("Delete error:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+}
+
 
 module.exports = { 
     index,
