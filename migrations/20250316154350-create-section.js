@@ -13,8 +13,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Courses',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       name: {
         type: Sequelize.STRING

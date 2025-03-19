@@ -25,7 +25,7 @@ app.use('/api/category',categoryRouter);
 app.use('/api/course',courseRouter);
 app.use('/api/section', sectionRouter);
 app.use('/api/lesson', lessonRouter);
-// app.use('/api/question', questionRouter);
+app.use('/api/question',questionRouter);
 // app.use('/api/answer', answerRouter);
 // app.use('/api/comment', commentRouter);
 // app.use('/api/enrollment', enrollmentRouter);

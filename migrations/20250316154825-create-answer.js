@@ -13,8 +13,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Questions',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       content: {
         type: Sequelize.TEXT

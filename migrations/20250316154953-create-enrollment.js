@@ -13,15 +13,17 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Courses',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       total_lesson: {
         type: Sequelize.INTEGER

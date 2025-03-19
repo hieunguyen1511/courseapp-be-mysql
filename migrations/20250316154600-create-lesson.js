@@ -13,8 +13,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Sections',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       title: {
         type: Sequelize.STRING
