@@ -56,7 +56,7 @@ async function create(req, res) {
       name: { type: "string", min: 3, max: 50, required: true },
       description: { type: "string", max: 255, required: false },
     };
-    const validate = v.validate({ name }, schema);
+    const validate = v.validate({ name, description }, schema);
     if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
 
     const category = await Category.create({ name, description });
@@ -83,7 +83,7 @@ async function update(req, res) {
       name: { type: "string", min: 3, max: 50, required: true },
       description: { type: "string", max: 255, required: false },
     };
-    const validate = v.validate({ name }, schema);
+    const validate = v.validate({ name, description }, schema);
     if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
     
     const category = await Category.findByPk(id);
