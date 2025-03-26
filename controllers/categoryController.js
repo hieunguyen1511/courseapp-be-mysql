@@ -1,6 +1,7 @@
 const Validator = require("fastest-validator");
 const { resource } = require("../app");
 const models = require("../models");
+const { Sequelize } = require("sequelize");
 
 const Category = models.Category;
 const v = new Validator();
@@ -12,7 +13,21 @@ function index(req, res) {
 
 async function getAll(req, res) {
   try {
-    const categories = await Category.findAll();
+    const categories = await Category.findAll({
+      attributes: [
+        'id',
+        'name',
+        'description',
+        [
+          Sequelize.literal(`(
+            SELECT COUNT(*) 
+            FROM Courses 
+            WHERE Courses.category_id = Category.id
+          )`),
+          'courseCount',
+        ],
+      ],
+    });
 
     return res.status(200).json({
       message: "Get all categories successfully",
@@ -32,7 +47,22 @@ async function getById(req, res) {
   try {
     const { id } = req.params;
     
-    const category = await Category.findByPk(id);
+    const category = await Category.findOne({
+      where: { id },
+      attributes: [
+        'id',
+        'name',
+        'description',
+        [
+          Sequelize.literal(`(
+            SELECT COUNT(*) 
+            FROM Courses 
+            WHERE Courses.category_id = ${id}
+          )`),
+          'courseCount',
+        ],
+      ],
+    });
 
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
