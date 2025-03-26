@@ -41,6 +41,13 @@ async function register(req, res) {
       phone: { type: "string", required: true, max: 12 },
       email: { type: "string", required: true },
     };
+    //check validate username or email
+    const checkUser = await User.findOne({ where: { username } });
+    if (checkUser) return res.status(400).json({ message: "Username already exists" });
+    const checkEmail = await User.findOne({ where: { email } });
+    if (checkEmail) return res.status(400).json({ message: "Email already exists" });
+
+
     const validate = v.validate({ username, password, fullname, birth, phone, email }, schema);
     if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
 
