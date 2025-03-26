@@ -1,4 +1,7 @@
 'use strict';
+
+const { all } = require('../app');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -13,15 +16,17 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Courses',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       total_lesson: {
         type: Sequelize.INTEGER
@@ -33,10 +38,12 @@ module.exports = {
         type: Sequelize.DOUBLE
       },
       rating: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
+        allowNull: true
       },
       review: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
