@@ -50,15 +50,16 @@ async function getById(req, res) {
 
 async function create(req, res) {
   try {
-    const { name } = req.body;
+    const { name, description } = req.body;
 
     const schema = {
       name: { type: "string", min: 3, max: 50, required: true },
+      description: { type: "string", max: 255, required: false },
     };
     const validate = v.validate({ name }, schema);
     if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
 
-    const category = await Category.create({ name });
+    const category = await Category.create({ name, description });
 
     return res.status(201).json({
       message: "Category created successfully",
@@ -76,10 +77,11 @@ async function create(req, res) {
 async function update(req, res) {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, description } = req.body;
 
     const schema = {
       name: { type: "string", min: 3, max: 50, required: true },
+      description: { type: "string", max: 255, required: false },
     };
     const validate = v.validate({ name }, schema);
     if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
@@ -87,7 +89,7 @@ async function update(req, res) {
     const category = await Category.findByPk(id);
     if (!category) return res.status(404).json({ message: "Category not found" });
 
-    await category.update({ name });
+    await category.update({ name, description });
 
     return res.status(200).json({
       message: "Category updated successfully",
