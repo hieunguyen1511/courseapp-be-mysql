@@ -10,12 +10,10 @@ function checkAuth(req, res, next) {
     return res.status(401).json({
       message: "Invalid or expired token",
       error: error,
-
     });
   }
 }
 
-
 module.exports = {
-    checkAuth,
-}
+  checkAuth,
+};

@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_id',
         as: 'comments'
       });
+      // User.belongsTo(sequelize.define('UserToken'), {
+      //   foreignKey: 'user_id',
+      //   as: 'userToken'
+      // });
     }
   }
   User.init({

@@ -10,5 +10,5 @@ router.get('/all',userController.getAll);
 router.get('/get/:id', userController.getById);
 router.put('/update/:id', userController.update);
 router.delete('/remove/:id', userController.remove);
-
+router.post('/refresh-token', userController.refreshToken);
 module.exports = router;

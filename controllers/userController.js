@@ -4,6 +4,7 @@ const models = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = models.User;
+const UserToken = models.UserToken;
 const v = new Validator();
 
 //const passwordHash = require('password-hash');
@@ -25,13 +26,16 @@ async function getAll(req, res) {
     });
   } catch (error) {
     console.error("Get users error:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 }
 
 async function register(req, res) {
   try {
-    const { username, password, fullname, birth, phone, email, avatar, role } = req.body;
+    const { username, password, fullname, birth, phone, email, avatar, role } =
+      req.body;
 
     const schema = {
       username: { type: "string", required: true, max: 50 },
@@ -43,13 +47,20 @@ async function register(req, res) {
     };
     //check validate username or email
     const checkUser = await User.findOne({ where: { username } });
-    if (checkUser) return res.status(400).json({ message: "Username already exists" });
+    if (checkUser)
+      return res.status(400).json({ message: "Username already exists" });
     const checkEmail = await User.findOne({ where: { email } });
-    if (checkEmail) return res.status(400).json({ message: "Email already exists" });
+    if (checkEmail)
+      return res.status(400).json({ message: "Email already exists" });
 
-
-    const validate = v.validate({ username, password, fullname, birth, phone, email }, schema);
-    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
+    const validate = v.validate(
+      { username, password, fullname, birth, phone, email },
+      schema
+    );
+    if (validate !== true)
+      return res
+        .status(400)
+        .json({ message: "Validation failed", error: validate });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -64,11 +75,17 @@ async function register(req, res) {
       avatar,
       role,
     });
+    await UserToken.create({
+      user_id: user.id,
+      refresh_token: null,
+    });
 
     return res.status(201).json({ message: "User created successfully", user });
   } catch (error) {
     console.error("Register error:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 }
 
@@ -77,17 +94,41 @@ async function login(req, res) {
     const { username, password } = req.body;
 
     const user = await User.findOne({ where: { username } });
-    if (!user) return res.status(404).json({ message: "Invalid username or password" });
+    if (!user)
+      return res.status(404).json({ message: "Invalid username or password" });
 
     const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) return res.status(401).json({ message: "Invalid username or password" });
+    if (!passwordMatch)
+      return res.status(401).json({ message: "Invalid username or password" });
 
-    const token = jwt.sign({ username: user.username, userId: user.id }, process.env.JWT_KEY, { expiresIn: "1h" });
+    const accesstoken = jwt.sign(
+      { username: user.username, userId: user.id },
+      process.env.JWT_KEY,
+      { expiresIn: "1h" }
+    );
+    const refreshtoken = jwt.sign(
+      { username: user.username, userId: user.id },
+      process.env.JWT_KEY,
+      { expiresIn: "7d" }
+    );
 
-    return res.status(200).json({ message: "Authentication successful", token });
+    await UserToken.update(
+      { refresh_token: refreshtoken },
+      { where: { user_id: user.id } }
+    );
+
+    return res
+      .status(200)
+      .json({
+        message: "Authentication successful",
+        accesstoken,
+        refreshtoken,
+      });
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 }
 
@@ -98,24 +139,30 @@ async function getById(req, res) {
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    return res.status(200).json({ message: "Get user by ID successfully", user });
+    return res
+      .status(200)
+      .json({ message: "Get user by ID successfully", user });
   } catch (error) {
     console.error("Error getting user by ID:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 }
 
 async function update(req, res) {
   try {
     const { id } = req.params;
-    const { old_password, password, fullname, birth, phone, email, avatar } = req.body;
+    const { old_password, password, fullname, birth, phone, email, avatar } =
+      req.body;
 
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     if (old_password && password) {
       const passwordMatch = await bcrypt.compare(old_password, user.password);
-      if (!passwordMatch) return res.status(400).json({ message: "Old password is incorrect" });
+      if (!passwordMatch)
+        return res.status(400).json({ message: "Old password is incorrect" });
 
       user.password = await bcrypt.hash(password, 10);
     }
@@ -127,7 +174,10 @@ async function update(req, res) {
       email: { type: "string", required: true },
     };
     const validate = v.validate({ fullname, birth, phone, email }, schema);
-    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
+    if (validate !== true)
+      return res
+        .status(400)
+        .json({ message: "Validation failed", error: validate });
 
     user.fullname = fullname;
     user.birth = birth;
@@ -140,7 +190,9 @@ async function update(req, res) {
     return res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     console.error("Error updated user:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 }
 
@@ -156,7 +208,46 @@ async function remove(req, res) {
     return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     console.error("Error deleting user:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
+  }
+}
+
+async function refreshToken(req, res) {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken)
+      return res.status(400).json({ message: "Refresh token is required" });
+
+    const userToken = await UserToken.findOne({
+      where: { refresh_token: refreshToken },
+    });
+    if (!userToken)
+      return res.status(404).json({ message: "Refresh token not found" });
+
+    const user = await User.findByPk(userToken.user_id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    jwt.verify(refreshToken, process.env.JWT_KEY, (error, decoded) => {
+      if (error)
+        return res
+          .status(401)
+          .json({ message: "Invalid or expired refresh token" });
+      const accesstoken = jwt.sign(
+        { username: user.username, userId: user.id },
+        process.env.JWT_KEY,
+        { expiresIn: "1h" }
+      );
+      return res
+        .status(200)
+        .json({ message: "Refresh token successful", accesstoken });
+    });
+  } catch (error) {
+    console.error("Refresh token error:", error);
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 }
 
@@ -168,4 +259,5 @@ module.exports = {
   getById,
   update,
   remove,
+  refreshToken,
 };
