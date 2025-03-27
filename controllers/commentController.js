@@ -24,7 +24,10 @@ async function getById(req, res) {
     if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
-    return res.status(200).json(comment);
+    return res.status(200).json({
+      message: `Get comment by ID successfully`,
+      comment,
+    });
   } catch (error) {
     console.error("Error getting comment by ID:", error);
     return res.status(500).json({
@@ -38,9 +41,12 @@ async function getByCourse(req, res) {
   try {
     const { course_id } = req.params;
     const comments = await Comment.findAll({ where: { course_id } });
-    return res.status(200).json(comments);
+    return res.status(200).json({
+      message: `Get comments by course successfully`,
+      comments,
+    });
   } catch (error) {
-    console.error("Error getting comment by course ID:", error);
+    console.error("Error getting comments by course:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -52,9 +58,12 @@ async function getByUser(req, res) {
   try {
     const { user_id } = req.params;
     const comments = await Comment.findAll({ where: { user_id } });
-    return res.status(200).json(comments);
+    return res.status(200).json({
+      message: `Get comments by user successfully`,
+      comments,
+    });
   } catch (error) {
-    console.error("Error getting comment by user ID:", error);
+    console.error("Error getting comments by user:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -76,7 +85,10 @@ async function create(req, res) {
       content,
       parent_id,
     });
-    return res.status(201).json(comment);
+    return res.status(201).json({
+      message: `Comment created successfullly`,
+      comment,
+    });
   } catch (error) {
     console.error("Error creating comment:", error);
     return res.status(500).json({
@@ -98,7 +110,10 @@ async function update(req, res) {
     const comment = await Comment.findByPk(id);
     if (!comment) return res.status(404).json({ message: "Comment not found" });
     await comment.update({ user_id, course_id, content, parent_id });
-    return res.status(200).json(comment);
+    return res.status(200).json({
+      message: `Comment updated successfullly`,
+      comment,
+    });
   } catch (error) {
     console.error("Error updating comment:", error);
     return res.status(500).json({

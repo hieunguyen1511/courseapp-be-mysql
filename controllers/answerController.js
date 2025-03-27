@@ -27,9 +27,12 @@ async function getByQuestion(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Get answers by question successfully", answers });
+      .json({ 
+        message: "Get answers by question successfully", 
+        answers 
+      });
   } catch (error) {
-    console.error("Get answers by question error:", error);
+    console.error("Error getting answers by question:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -45,7 +48,10 @@ async function getById(req, res) {
       return res.status(404).json({ message: "Answer not found" });
     }
 
-    return res.status(200).json(answer);
+    return res.status(200).json({
+      message: `Get answer by ID successfully`,
+      answer,
+    });
   } catch (error) {
     console.error("Error getting answer by ID:", error);
     return res
@@ -74,7 +80,7 @@ async function create(req, res) {
     });
     return res
       .status(201)
-      .json({ message: "Create answer successfully", answer });
+      .json({ message: "Answer created successfully", answer });
   } catch (error) {
     console.error("Error creating answer:", error);
     return res
@@ -111,7 +117,7 @@ async function update(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Update answer successfully", answer });
+      .json({ message: "Answer updated successfully", answer });
   } catch (error) {
     console.error("Error updating answer:", error);
     return res

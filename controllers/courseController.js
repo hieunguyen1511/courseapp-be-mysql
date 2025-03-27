@@ -17,7 +17,7 @@ async function getAll(req, res) {
       courses,
     });
   } catch (error) {
-    console.error("Get all courses error:", error);
+    console.error("Error getting all courses:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -32,9 +32,12 @@ async function getById(req, res) {
 
     if (!course) return res.status(404).json({ message: "Course not found" });
 
-    return res.status(200).json(course);
+    return res.status(200).json({
+      message: `Get course by ID successfully`,
+      course,
+    });
   } catch (error) {
-    console.error("Get course by ID error:", error);
+    console.error("Error getting course by ID:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -48,11 +51,11 @@ async function getByIdCategory(req, res) {
     const courses = await Course.findAll({ where: { category_id: id } });
 
     return res.status(200).json({
-      message: "Get courses by category successfully",
+      message: `Get courses by category successfully`,
       courses,
     });
   } catch (error) {
-    console.error("Get courses by category error:", error);
+    console.error("Error getting courses by category:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -76,7 +79,7 @@ async function create(req, res) {
       course,
     });
   } catch (error) {
-    console.error("Create course error:", error);
+    console.error("Error creating course:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -103,7 +106,7 @@ async function update(req, res) {
       course,
     });
   } catch (error) {
-    console.error("Update course error:", error);
+    console.error("Error updating course:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -122,7 +125,7 @@ async function remove(req, res) {
 
     return res.status(200).json({ message: "Course deleted successfully" });
   } catch (error) {
-    console.error("Delete course error:", error);
+    console.error("Error deleting course:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
