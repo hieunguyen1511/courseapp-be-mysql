@@ -1,15 +1,15 @@
 const express = require('express');
-
+const {checkAuth} = require('../middleware/check-auth');
 const enrollmentController = require('../controllers/enrollmentController');
 
 const router = express.Router();
 
-router.get('/',enrollmentController.index);
-router.post('/create', enrollmentController.create);
-router.get('/get/:id', enrollmentController.getById);
-router.get('/getByCourse/:course_id', enrollmentController.getByCourse);
-router.get('/getByUser/:user_id', enrollmentController.getByUser);
-router.put('/update/:id', enrollmentController.update);
-router.delete('/remove/:id', enrollmentController.remove);
+router.get('/',checkAuth,enrollmentController.index);
+router.post('/create',checkAuth, enrollmentController.create);
+router.get('/get/:id',checkAuth, enrollmentController.getById);
+router.get('/getByCourse/:course_id',checkAuth, enrollmentController.getByCourse);
+router.get('/getByUser/:user_id',checkAuth, enrollmentController.getByUser);
+router.put('/update/:id',checkAuth, enrollmentController.update);
+router.delete('/remove/:id',checkAuth, enrollmentController.remove);
 
 module.exports = router;
