@@ -23,7 +23,7 @@ async function getAll(req, res) {
       .status(200)
       .json({ message: "Get all lessons successfully", lessons });
   } catch (error) {
-    console.error("Get lessons error:", error);
+    console.error("Error getting lessons:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -37,9 +37,9 @@ async function getByIdSection(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Get lessons by course successfully", lessons });
+      .json({ message: "Get lessons by section successfully", lessons });
   } catch (error) {
-    console.error("Get lessons by course error:", error);
+    console.error("Error getting lessons by section:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -71,7 +71,7 @@ async function create(req, res) {
       .status(201)
       .json({ message: "Lesson created successfully", lesson });
   } catch (error) {
-    console.error("Create lesson error:", error);
+    console.error("Error creating lesson:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -106,7 +106,7 @@ async function update(req, res) {
       .status(200)
       .json({ message: "Lesson updated successfully", lesson });
   } catch (error) {
-    console.error("Update lesson error:", error);
+    console.error("Error updating lesson:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -124,7 +124,7 @@ async function remove(req, res) {
 
     return res.status(200).json({ message: "Lesson deleted successfully" });
   } catch (error) {
-    console.error("Delete lesson error:", error);
+    console.error("Error deleting lesson:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });

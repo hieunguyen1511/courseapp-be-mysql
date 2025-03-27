@@ -47,7 +47,7 @@ async function create(req, res) {
 
     return res.status(201).json({ message: "Section created successfully", section });
   } catch (error) {
-    console.error("Create section error:", error);
+    console.error("Error creating section:", error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
@@ -75,7 +75,7 @@ async function update(req, res) {
 
     return res.status(200).json({ message: "Section updated successfully", section });
   } catch (error) {
-    console.error("Update section error:", error);
+    console.error("Error updated section:", error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
@@ -91,7 +91,7 @@ async function remove(req, res) {
 
     return res.status(200).json({ message: "Section deleted successfully" });
   } catch (error) {
-    console.error("Delete section error:", error);
+    console.error("Error deleted error:", error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }

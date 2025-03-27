@@ -27,7 +27,10 @@ async function getById(req, res) {
       return res.status(404).json({ message: "Enrollment not found" });
     }
 
-    return res.status(200).json(enrollment);
+    return res.status(200).json({
+      message: `Get enrollment by ID successfully`,
+      enrollment,
+    });
   } catch (error) {
     console.error("Error getting enrollment by ID:", error);
     return res
@@ -47,7 +50,7 @@ async function getByCourse(req, res) {
       .status(200)
       .json({ message: "Get enrollments by course successfully", enrollments });
   } catch (error) {
-    console.error("Get enrollments by course error:", error);
+    console.error("Error getting enrollments by course:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -63,9 +66,9 @@ async function getByUser(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Get enrollments by user successfully", enrollments });
+      .json({ message: `Get enrollments by user successfully`, enrollments });
   } catch (error) {
-    console.error("Get enrollments by user error:", error);
+    console.error("Error getting enrollments by user:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -103,9 +106,9 @@ async function create(req, res) {
     });
     return res
       .status(201)
-      .json({ message: "Create enrollment successfully", enrollment });
+      .json({ message: "Enrollment created successfully", enrollment });
   } catch (error) {
-    console.error("Create enrollment error:", error);
+    console.error("Error creating enrollment:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -149,9 +152,9 @@ async function update(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Update enrollment successfully", enrollment });
+      .json({ message: "Enrollment updated successfully", enrollment });
   } catch (error) {
-    console.error("Update enrollment error:", error);
+    console.error("Error updating enrollment:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -167,9 +170,9 @@ async function remove(req, res) {
     }
 
     await enrollment.destroy();
-    return res.status(200).json({ message: "Delete enrollment successfully" });
+    return res.status(200).json({ message: "Enrollment deleted successfully" });
   } catch (error) {
-    console.error("Delete enrollment error:", error);
+    console.error("Error deleting enrollment:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });

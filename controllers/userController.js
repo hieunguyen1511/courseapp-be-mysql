@@ -98,9 +98,9 @@ async function getById(req, res) {
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    return res.status(200).json(user);
+    return res.status(200).json({ message: "Get user by ID successfully", user });
   } catch (error) {
-    console.error("Get user by ID error:", error);
+    console.error("Error getting user by ID:", error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
@@ -139,7 +139,7 @@ async function update(req, res) {
 
     return res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
-    console.error("Update error:", error);
+    console.error("Error updated user:", error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
@@ -155,7 +155,7 @@ async function remove(req, res) {
 
     return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    console.error("Delete user error:", error);
+    console.error("Error deleting user:", error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
