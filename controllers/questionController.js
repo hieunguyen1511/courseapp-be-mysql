@@ -27,7 +27,7 @@ async function get_question_by_lesson(req, res) {
       .status(200)
       .json({ message: "Get questions by lesson successfully", questions });
   } catch (error) {
-    console.error("Get questions by lession error:", error);
+    console.error("Error getting questions by lession:", error);
     return res
       .status(500)
       .json({ message: "Something went wrong", error: error.message });
@@ -43,7 +43,10 @@ async function getById(req, res) {
       return res.status(404).json({ message: "Question not found" });
     }
 
-    return res.status(200).json(question);
+    return res.status(200).json({ 
+      message: "Get question by ID successfully", 
+      questions 
+    });
   } catch (error) {
     console.error("Error getting question by ID:", error);
     return res
@@ -72,7 +75,7 @@ async function create(req, res) {
     });
     return res
       .status(201)
-      .json({ message: "Create question successfully", question });
+      .json({ message: "Question created successfully", question });
   } catch (error) {
     console.error("Error creating question:", error);
     return res
@@ -107,7 +110,7 @@ async function update(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Update question successfully", question });
+      .json({ message: "Question updated successfully", question });
   } catch (error) {
     console.error("Error updating question:", error);
     return res
@@ -126,7 +129,7 @@ async function remove(req, res) {
 
     await question.destroy();
 
-    return res.status(200).json({ message: "Delete question successfully" });
+    return res.status(200).json({ message: "Question deleted successfully" });
   } catch (error) {
     console.error("Error deleting question:", error);
     return res

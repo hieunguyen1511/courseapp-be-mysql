@@ -68,7 +68,10 @@ async function getById(req, res) {
       return res.status(404).json({ message: "Category not found" });
     }
 
-    return res.status(200).json(category);
+    return res.status(200).json({
+      message: `Get category by ID successfully`,
+      category,
+    });
   } catch (error) {
     console.error("Error getting category by ID:", error);
     return res.status(500).json({
@@ -96,7 +99,7 @@ async function create(req, res) {
       category,
     });
   } catch (error) {
-    console.error("Create error:", error);
+    console.error("Error creating category:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -126,7 +129,7 @@ async function update(req, res) {
       category,
     });
   } catch (error) {
-    console.error("Update error:", error);
+    console.error("Error updating category:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
@@ -147,7 +150,7 @@ async function remove(req, res) {
 
     return res.status(200).json({ message: "Category deleted successfully" });
   } catch (error) {
-    console.error("Delete error:", error);
+    console.error("Error deleting category:", error);
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
