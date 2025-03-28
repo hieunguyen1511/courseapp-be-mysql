@@ -217,12 +217,12 @@ async function remove(req, res) {
 
 async function refreshToken(req, res) {
   try {
-    const { refreshToken } = req.body;
-    if (!refreshToken)
+    const { refresh_token } = req.body;
+    if (!refresh_token)
       return res.status(400).json({ message: "Refresh token is required" });
 
     const userToken = await UserToken.findOne({
-      where: { refresh_token: refreshToken },
+      where: { refresh_token: refresh_token },
     });
     if (!userToken)
       return res.status(404).json({ message: "Refresh token not found" });
@@ -230,19 +230,19 @@ async function refreshToken(req, res) {
     const user = await User.findByPk(userToken.user_id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    jwt.verify(refreshToken, process.env.JWT_KEY, (error, decoded) => {
+    jwt.verify(refresh_token, process.env.JWT_KEY, (error, decoded) => {
       if (error)
         return res
           .status(401)
           .json({ message: "Invalid or expired refresh token" });
-      const accesstoken = jwt.sign(
+      const access_token = jwt.sign(
         { username: user.username, userId: user.id },
         process.env.JWT_KEY,
         { expiresIn: "1h" }
       );
       return res
         .status(200)
-        .json({ message: "Refresh token successful", accesstoken });
+        .json({ message: "Refresh token successful", access_token });
     });
   } catch (error) {
     console.error("Refresh token error:", error);

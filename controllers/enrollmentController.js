@@ -61,6 +61,13 @@ async function getByUser(req, res) {
   try {
     const { user_id } = req.params;
     const enrollments = await Enrollment.findAll({
+      include: [
+        {
+          model: models.Course,
+          as: "course",
+          required: true,
+        },
+      ],
       where: { user_id: user_id },
     });
 

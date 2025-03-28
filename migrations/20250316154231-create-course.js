@@ -26,6 +26,12 @@ module.exports = {
       status: {
         type: Sequelize.INTEGER
       },
+      total_rating: {
+        type: Sequelize.FLOAT
+      },
+      image: {
+        type: Sequelize.STRING
+      },
       price: {
         type: Sequelize.DOUBLE
       },
