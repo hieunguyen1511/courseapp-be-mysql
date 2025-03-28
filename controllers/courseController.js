@@ -63,6 +63,28 @@ async function getByIdCategory(req, res) {
   }
 }
 
+async function getByIdUser(req, res) {
+  try {
+    const { user_id } = req.params;
+    const enrollments = await Enrollment.findAll({
+      where: { user_id },
+      include: [Course],
+    });
+    const courses = enrollments.map((enrollment) => enrollment.Course);
+    return res.status(200).json({
+      message: `Get courses by user successfully`,
+      courses,
+    });
+  } catch (error) {
+    console.error("Error getting courses by user:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+}
+
+
 
 async function create(req, res) {
   try {
@@ -138,6 +160,7 @@ module.exports = {
     getAll, 
     getById, 
     getByIdCategory,
+    getByIdUser,
     create, 
     update, 
     remove 
