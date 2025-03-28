@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/',checkAuth,courseController.index);
 router.post('/create',checkAuth, courseController.create);
-router.get('/all',courseController.getAll);
+router.get('/all',checkAuth,courseController.getAll);
 router.get('/get/:id',checkAuth, courseController.getById);
 router.get('/getByCategory/:id',checkAuth, courseController.getByIdCategory);
 router.put('/update/:id',checkAuth, courseController.update);

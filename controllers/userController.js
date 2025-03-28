@@ -101,19 +101,19 @@ async function login(req, res) {
     if (!passwordMatch)
       return res.status(401).json({ message: "Invalid username or password" });
 
-    const accesstoken = jwt.sign(
+    const access_token = jwt.sign(
       { username: user.username, userId: user.id },
       process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
-    const refreshtoken = jwt.sign(
+    const refresh_token = jwt.sign(
       { username: user.username, userId: user.id },
       process.env.JWT_KEY,
       { expiresIn: "7d" }
     );
 
     await UserToken.update(
-      { refresh_token: refreshtoken },
+      { refresh_token: refresh_token },
       { where: { user_id: user.id } }
     );
 
@@ -121,8 +121,9 @@ async function login(req, res) {
       .status(200)
       .json({
         message: "Authentication successful",
-        accesstoken,
-        refreshtoken,
+        user,
+        access_token,
+        refresh_token,
       });
   } catch (error) {
     console.error("Login error:", error);
