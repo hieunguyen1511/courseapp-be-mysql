@@ -9,6 +9,7 @@ router.post('/create',checkAuth, courseController.create);
 router.get('/all',checkAuth,courseController.getAll);
 router.get('/get/:id',checkAuth, courseController.getById);
 router.get('/getByCategory/:id',checkAuth, courseController.getByIdCategory);
+router.get('/getByUser/:id',checkAuth, courseController.getByIdUser);
 router.put('/update/:id',checkAuth, courseController.update);
 router.delete('/remove/:id',checkAuth, courseController.remove);
 
