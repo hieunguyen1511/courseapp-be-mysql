@@ -1,17 +1,39 @@
 const Validator = require("fastest-validator");
 const { resource } = require("../app");
-const models = require("../models");
 
-const Course = models.Course;
+const { Course, Category, Enrollment, sequelize } = require("../models");
+const { Sequelize } = require("sequelize");
 
 function index(req, res) {
   const course = "khóa học";
   res.send("Hello " + course);
 }
-
 async function getAll(req, res) {
   try {
-    const courses = await Course.findAll();
+    const courses = await Course.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.fn("COUNT", sequelize.col("enrollments.id")),
+            "enrollment_count",
+          ],
+        ],
+      },
+      include: [
+        {
+          model: Category, // Chắc chắn rằng Category được import từ models
+          attributes: ["id", "name"],
+          as: "category",
+        },
+        {
+          model: Enrollment,
+          attributes: [], // Không cần lấy chi tiết Enrollment, chỉ đếm số lượng
+          as: "enrollments",
+        },
+      ],
+      group: ["Course.id", "category.id"],
+    });
+
     return res.status(200).json({
       message: "Get all courses successfully",
       courses,
@@ -24,6 +46,9 @@ async function getAll(req, res) {
     });
   }
 }
+
+
+
 
 async function getById(req, res) {
   try {
