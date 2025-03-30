@@ -113,13 +113,13 @@ async function getByIdUser(req, res) {
 
 async function create(req, res) {
   try {
-    const { category_id, name, description, status, price, discount } = req.body;
+    const { category_id, name, description, status, price, discount, image } = req.body;
 
     if (!category_id || !name || !status || !price) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const course = await Course.create({ category_id, name, description, status, price, discount });
+    const course = await Course.create({ category_id, name, description, status, price, discount, image });
 
     return res.status(201).json({
       message: "Course created successfully",
@@ -137,7 +137,7 @@ async function create(req, res) {
 async function update(req, res) {
   try {
     const { id } = req.params;
-    const { category_id, name, description, status, price, discount } = req.body;
+    const { category_id, name, description, status, price, discount, image } = req.body;
 
     if (!category_id || !name || !status || !price) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -146,7 +146,7 @@ async function update(req, res) {
     const course = await Course.findByPk(id);
     if (!course) return res.status(404).json({ message: "Course not found" });
 
-    await course.update({ category_id, name, description, status, price, discount });
+    await course.update({ category_id, name, description, status, price, discount, image });
 
     return res.status(200).json({
       message: "Course updated successfully",
