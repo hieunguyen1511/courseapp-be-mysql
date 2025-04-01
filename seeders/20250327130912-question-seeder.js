@@ -17,6 +17,8 @@ module.exports = {
       lesson_id: 1,
       content: 'What is the capital of Nigeria?',
       note: 'Abuja is the capital of Nigeria',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
    ], {});
   },

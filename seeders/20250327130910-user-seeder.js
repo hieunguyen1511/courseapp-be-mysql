@@ -12,6 +12,8 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
+    const now = new Date();
+
     return queryInterface.bulkInsert("Users", [
       {
         username: "hieunguyen1511",
@@ -23,6 +25,8 @@ module.exports = {
         email: "hieunguyentronghieu69@gmail.com",
         avatar: null,
         role: 1,
+        createdAt: now,
+        updatedAt: now,
       },
     ], {});
   },

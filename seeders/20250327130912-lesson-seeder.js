@@ -21,6 +21,8 @@ module.exports = {
           content: "This is the first lesson",
           is_quizz: true,
           video_url: "",
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       ],
       {}
