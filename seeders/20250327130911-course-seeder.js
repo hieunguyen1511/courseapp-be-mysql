@@ -20,6 +20,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 1,
@@ -28,6 +30,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 1,
@@ -36,6 +40,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 2,
@@ -44,6 +50,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 2,
@@ -52,6 +60,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 2,
@@ -60,6 +70,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 3,
@@ -68,6 +80,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 3,
@@ -76,6 +90,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         category_id: 3,
@@ -84,6 +100,8 @@ module.exports = {
         status: 1,
         price: 200000,
         discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ], {});
   },

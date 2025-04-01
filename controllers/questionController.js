@@ -15,7 +15,46 @@ function index(req, res) {
   const question = "câu hỏi";
   res.send("Hello " + question);
 }
-
+/**
+ * @openapi
+ * /api/questions/get-by-lesson:
+ *   get:
+ *     tags:
+ *       - Questions
+ *     summary: Get questions by lesson
+ *     description: Get questions by lesson
+ *     parameters:
+ *       - name: lesson_id
+ *         in: query
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Questions retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 questions:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Question'
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 async function get_question_by_lesson(req, res) {
   try {
     const { lesson_id } = req.params;
@@ -33,7 +72,46 @@ async function get_question_by_lesson(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/questions/get-by-id:
+ *   get:
+ *     tags:
+ *       - Questions
+ *     summary: Get question by ID
+ *     description: Get question by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the question to get
+ *     responses:
+ *       200:
+ *         description: Question retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 question:
+ *                   $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: Question not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */ 
 async function getById(req, res) {
   try {
     const { id } = req.params;
@@ -54,7 +132,45 @@ async function getById(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/questions/create:
+ *   post:
+ *     tags:
+ *       - Questions
+ *     summary: Create a new question
+ *     description: Create a new question
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/QuestionInput'
+ *     responses:
+ *       201:
+ *         description: Question created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 question:
+ *                   $ref: '#/components/schemas/Question'
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 async function create(req, res) {
   try {
     const v = new Validator();
@@ -83,7 +199,58 @@ async function create(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/questions/update/{id}:
+ *   put:
+ *     tags:
+ *       - Questions
+ *     summary: Update a question
+ *     description: Update a question
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the question to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/QuestionInput'
+ *     responses:
+ *       200:
+ *         description: Question updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 question:
+ *                   $ref: '#/components/schemas/Question'
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Question not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 async function update(req, res) {
   try {
 
@@ -118,7 +285,46 @@ async function update(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/questions/remove/{id}:
+ *   delete:
+ *     tags:
+ *       - Questions
+ *     summary: Delete a question
+ *     description: Delete a question
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the question to delete
+ *     responses:
+ *       200:
+ *         description: Question deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 question:
+ *                   $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: Question not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */ 
 async function remove(req, res) {
   try {
     const { id } = req.params;
