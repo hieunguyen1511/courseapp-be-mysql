@@ -18,6 +18,56 @@ function index(req, res) {
   res.send("Hello " + enrollment);
 }
 
+/**
+ * @openapi
+ * /api/enrollment/get-by-id:
+ *  get:
+ *     tags:
+ *     - Enrollment Controller  
+ *     description: Get all enrollments
+ *     responses:
+ *       200:
+ *         description: Get all enrollments successfully
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 enrollments: 
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number 
+ *                       course_id:
+ *                         type: number
+ *                       user_id:
+ *                         type: number
+ *                       complete_lesson:
+ *                         type: number 
+ *                       rating:
+ *                         type: number
+ *                       review:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string 
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error: 
+ *                   type: string
+ */
 async function getById(req, res) {
   try {
     const { id } = req.params;
@@ -38,7 +88,61 @@ async function getById(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/enrollment/get-by-course:
+ *  get:
+ *     tags:
+ *     - Enrollment Controller
+ *     description: Get enrollments by course   
+ *     parameters:
+ *       - name: course_id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Get enrollments by course successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 enrollments:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       course_id:
+ *                         type: number
+ *                       user_id:
+ *                         type: number
+ *                       complete_lesson:
+ *                         type: number
+ *                       rating:
+ *                         type: number
+ *                       review:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string 
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */               
 async function getByCourse(req, res) {
   try {
     const { course_id } = req.params;
@@ -56,7 +160,61 @@ async function getByCourse(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/enrollment/get-by-user:
+ *  get:
+ *     tags:
+ *     - Enrollment Controller
+ *     description: Get enrollments by user   
+ *     parameters:
+ *       - name: user_id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Get enrollments by user successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 enrollments:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       course_id:
+ *                         type: number
+ *                       user_id:
+ *                         type: number
+ *                       complete_lesson:
+ *                         type: number
+ *                       rating:
+ *                         type: number
+ *                       review:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function getByUser(req, res) {
   try {
     const { user_id } = req.params;
@@ -81,17 +239,92 @@ async function getByUser(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/enrollment/create:
+ *  post:
+ *     tags:
+ *     - Enrollment Controller
+ *     description: Create a new enrollment   
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               course_id:
+ *                 type: number
+ *                 user_id:
+ *                 type: number
+ *               total_lesson:
+ *                 type: number
+ *               complete_lesson:
+ *                 type: number
+ *               price:
+ *                 type: number
+ *               rating:
+ *                 type: number
+ *               review:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Enrollment created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 enrollment:
+ *                    type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     course_id:
+ *                       type: number
+ *                     user_id:
+ *                       type: number
+ *                     total_lesson:
+ *                       type: number
+ *                     complete_lesson:
+ *                       type: number
+ *                     price:
+ *                       type: number 
+ *                     rating:
+ *                       type: number
+ *                     review:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string 
+ *                     updatedAt:
+ *                       type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error: 
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string 
+ */
 async function create(req, res) {
   try {
-    const validationResponse = v.validate(req.body, schema);
-    if (validationResponse !== true) {
-      return res.status(400).json({
-        message: "Validation failed",
-        errors: validationResponse,
-      });
-    }
-
     const {
       course_id,
       user_id,
@@ -121,7 +354,74 @@ async function create(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/enrollment/update:
+ *  put:
+ *     tags:
+ *     - Enrollment Controller  
+ *     description: Update an enrollment   
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number 
+ *     responses:
+ *       200:
+ *         description: Enrollment updated successfully
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 enrollment:
+ *                   type: object 
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     course_id:
+ *                       type: number
+ *                     user_id: 
+ *                       type: number
+ *                     total_lesson:
+ *                       type: number
+ *                     complete_lesson:
+ *                       type: number
+ *                     price: 
+ *                       type: number
+ *                     rating:
+ *                       type: number
+ *                     review:
+ *                       type: string
+ *                     createdAt: 
+ *                       type: string
+ *                     updatedAt:
+ *                       type: string
+ *       400:
+ *         description: Validation failed
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string 
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string 
+ */
 async function update(req, res) {
   try {
     const validationResponse = v.validate(req.body, schema);
@@ -167,7 +467,51 @@ async function update(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/enrollment/delete:
+ *  delete:
+ *     tags:
+ *     - Enrollment Controller  
+ *     description: Delete an enrollment   
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Enrollment deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Enrollment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string 
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object 
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */ 
 async function remove(req, res) {
   try {
     const { id } = req.params;
@@ -175,7 +519,6 @@ async function remove(req, res) {
     if (!enrollment) {
       return res.status(404).json({ message: "Enrollment not found" });
     }
-
     await enrollment.destroy();
     return res.status(200).json({ message: "Enrollment deleted successfully" });
   } catch (error) {

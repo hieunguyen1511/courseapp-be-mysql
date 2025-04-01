@@ -8,6 +8,38 @@ function index(req, res) {
   const course = "khóa học";
   res.send("Hello " + course);
 }
+/**
+ * @openapi
+ * /api/courses/get-all:
+ *   get:
+ *     tags:
+ *       - Courses  
+ *     summary: Get all courses
+ *     description: Get all courses
+ *     responses:
+ *       200:
+ *         description: Courses retrieved successfully
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string 
+ *                 error:
+ *                   type: string
+ *       500:   
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */   
 async function getAll(req, res) {
   try {
     const courses = await Course.findAll({
@@ -49,7 +81,54 @@ async function getAll(req, res) {
 
 
 
-
+/**
+ * @openapi
+ * /api/courses/get-by-id:
+ *   get:
+ *     tags:
+ *       - Courses
+ *     summary: Get course by ID
+ *     description: Get course by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Course retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 course:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                     price:
+ *                       type: number
+ *       404:
+ *         description: Course not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */             
 async function getById(req, res) {
   try {
     const { id } = req.params;
@@ -69,12 +148,68 @@ async function getById(req, res) {
     });
   }
 }
-
+/**
+ * @openapi
+ * /api/courses/get-by-category:
+ *   get:
+ *     tags:
+ *       - Courses
+ *     summary: Get course by ID
+ *     description: Get course by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Courses retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       status:
+ *                         type: string 
+ *                       price:
+ *                         type: number
+ *                       discount:
+ *                         type: number
+ *                       image:
+ *                         type: string 
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error: 
+ *                   type: string
+ */
 async function getByIdCategory(req, res) {
   try {
     const { id } = req.params;
-    const courses = await Course.findAll({ where: { category_id: id } });
-
+    const courses = await Course.findAll({ where: { category_id: id } }); 
     return res.status(200).json({
       message: `Get courses by category successfully`,
       courses,
@@ -87,7 +222,64 @@ async function getByIdCategory(req, res) {
     });
   }
 }
-
+/**
+ * @openapi
+ * /api/courses/get-by-user:
+ *   get:
+ *     tags:
+ *       - Courses
+ *     summary: Get courses by user 
+ *     description: Get courses by user 
+ *     parameters:
+ *       - name: user_id
+ *         in: path
+ *         required: true
+ *         type: number 
+ *     responses:
+ *       200:
+ *         description: Courses retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 courses:
+ *                   type: array  
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       name:  
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *                       price: 
+ *                         type: number
+ *                       discount:
+ *                         type: number
+ *                       image:
+ *                         type: string
+ *                       createdAt: 
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string 
+ *                 error:
+ *                   type: string
+ */ 
 async function getByIdUser(req, res) {
   try {
     const { user_id } = req.params;
@@ -111,6 +303,91 @@ async function getByIdUser(req, res) {
 
 
 
+/**
+ * @openapi
+ * /api/courses/create:
+ *   post:
+ *     tags:
+ *       - Courses  
+ *     summary: Create a new course
+ *     description: Create a new course
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:  
+ *           schema:
+ *             type: object
+ *             properties:
+ *               category_id:
+ *                 type: number
+ *               name:  
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               price: 
+ *                 type: number
+ *               discount:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *     responses: 
+ *       201:
+ *         description: Course created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object 
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 course:
+ *                   type: object
+ *                     properties:  
+ *                       id:
+ *                         type: number
+ *                       category_id:
+ *                         type: number
+ *                       name:
+ *                         type: string 
+ *                       description:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *                       price:
+ *                         type: number 
+ *                       discount:
+ *                         type: number
+ *                       image:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string 
+ *                       updatedAt:
+ *                         type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error: 
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error: 
+ *                   type: string
+ */
 async function create(req, res) {
   try {
     const { category_id, name, description, status, price, discount, image } = req.body;
@@ -134,6 +411,96 @@ async function create(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /api/courses/update:
+ *   put:
+ *     tags:
+ *       - Courses  
+ *     summary: Update a course
+ *     description: Update a course
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true 
+ *         type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:  
+ *             type: object
+ *             properties:
+ *               category_id:
+ *                 type: number
+ *               name:
+ *                 type: string 
+ *               description:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               price:
+ *                 type: number 
+ *               discount:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *     responses:
+ *       200: 
+ *         description: Course updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:  
+ *                 message:
+ *                   type: string
+ *                 course:
+ *                   type: object
+ *                     properties:
+ *                       id:  
+ *                         type: number
+ *                       category_id:
+ *                         type: number
+ *                       name:
+ *                         type: string
+ *                       description: 
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *                       price:
+ *                         type: number
+ *                       discount:  
+ *                         type: number
+ *                       image:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt: 
+ *                         type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string 
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object 
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */ 
 async function update(req, res) {
   try {
     const { id } = req.params;
@@ -160,7 +527,52 @@ async function update(req, res) {
     });
   }
 }
-
+/**
+ * @openapi
+ * /api/courses/delete:
+ *   delete:
+ *     tags:
+ *       - Courses  
+ *     summary: Delete a course 
+ *     description: Delete a course
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number 
+ *     responses:
+ *       200:
+ *         description: Course deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Course not found  
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string 
+ *                 error:
+ *                   type: string
+ */
 async function remove(req, res) {
   try {
     const { id } = req.params;
