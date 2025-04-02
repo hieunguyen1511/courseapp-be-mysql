@@ -2,7 +2,7 @@ const Validator = require("fastest-validator");
 const { resource } = require("../app");
 
 const { Course, Category, Enrollment, sequelize } = require("../models");
-const { Sequelize } = require("sequelize");
+const { Sequelize, where } = require("sequelize");
 
 function index(req, res) {
   const course = "khóa học";
@@ -13,22 +13,22 @@ function index(req, res) {
  * /api/courses/get-all:
  *   get:
  *     tags:
- *       - Courses  
+ *       - Courses
  *     summary: Get all courses
  *     description: Get all courses
  *     responses:
  *       200:
  *         description: Courses retrieved successfully
- *         content: 
+ *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
- *                   type: string 
+ *                   type: string
  *                 error:
  *                   type: string
- *       500:   
+ *       500:
  *         description: Something went wrong
  *         content:
  *           application/json:
@@ -39,7 +39,7 @@ function index(req, res) {
  *                   type: string
  *                 error:
  *                   type: string
- */   
+ */
 async function getAll(req, res) {
   try {
     const courses = await Course.findAll({
@@ -78,8 +78,6 @@ async function getAll(req, res) {
     });
   }
 }
-
-
 
 /**
  * @openapi
@@ -128,7 +126,7 @@ async function getAll(req, res) {
  *                   type: string
  *                 error:
  *                   type: string
- */             
+ */
 async function getById(req, res) {
   try {
     const { id } = req.params;
@@ -183,13 +181,13 @@ async function getById(req, res) {
  *                       description:
  *                         type: string
  *                       status:
- *                         type: string 
+ *                         type: string
  *                       price:
  *                         type: number
  *                       discount:
  *                         type: number
  *                       image:
- *                         type: string 
+ *                         type: string
  *                       createdAt:
  *                         type: string
  *                       updatedAt:
@@ -203,13 +201,13 @@ async function getById(req, res) {
  *               properties:
  *                 message:
  *                   type: string
- *                 error: 
+ *                 error:
  *                   type: string
  */
 async function getByIdCategory(req, res) {
   try {
     const { id } = req.params;
-    const courses = await Course.findAll({ where: { category_id: id } }); 
+    const courses = await Course.findAll({ where: { category_id: id } });
     return res.status(200).json({
       message: `Get courses by category successfully`,
       courses,
@@ -228,58 +226,58 @@ async function getByIdCategory(req, res) {
  *   get:
  *     tags:
  *       - Courses
- *     summary: Get courses by user 
- *     description: Get courses by user 
+ *     summary: Get courses by user
+ *     description: Get courses by user
  *     parameters:
  *       - name: user_id
  *         in: path
  *         required: true
- *         type: number 
+ *         type: number
  *     responses:
  *       200:
  *         description: Courses retrieved successfully
  *         content:
  *           application/json:
- *             schema:  
+ *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                 courses:
- *                   type: array  
+ *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
  *                       id:
  *                         type: number
- *                       name:  
+ *                       name:
  *                         type: string
  *                       description:
  *                         type: string
  *                       status:
  *                         type: string
- *                       price: 
+ *                       price:
  *                         type: number
  *                       discount:
  *                         type: number
  *                       image:
  *                         type: string
- *                       createdAt: 
+ *                       createdAt:
  *                         type: string
  *                       updatedAt:
  *                         type: string
  *       500:
  *         description: Something went wrong
- *         content: 
+ *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
- *                   type: string 
+ *                   type: string
  *                 error:
  *                   type: string
- */ 
+ */
 async function getByIdUser(req, res) {
   try {
     const { user_id } = req.params;
@@ -301,102 +299,118 @@ async function getByIdUser(req, res) {
   }
 }
 
-
-
 /**
  * @openapi
  * /api/courses/create:
  *   post:
  *     tags:
- *       - Courses  
+ *       - Courses
  *     summary: Create a new course
  *     description: Create a new course
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:  
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
  *               category_id:
  *                 type: number
- *               name:  
+ *               name:
  *                 type: string
  *               description:
  *                 type: string
  *               status:
  *                 type: string
- *               price: 
+ *               price:
  *                 type: number
  *               discount:
  *                 type: number
  *               image:
  *                 type: string
- *     responses: 
+ *     responses:
  *       201:
  *         description: Course created successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object 
+ *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                 course:
  *                   type: object
- *                     properties:  
+ *                     properties:
  *                       id:
  *                         type: number
  *                       category_id:
  *                         type: number
  *                       name:
- *                         type: string 
+ *                         type: string
  *                       description:
  *                         type: string
  *                       status:
  *                         type: string
  *                       price:
- *                         type: number 
+ *                         type: number
  *                       discount:
  *                         type: number
  *                       image:
  *                         type: string
  *                       createdAt:
- *                         type: string 
+ *                         type: string
  *                       updatedAt:
  *                         type: string
  *       400:
  *         description: Validation failed
  *         content:
- *           application/json:  
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
- *                 error: 
+ *                 error:
  *                   type: string
  *       500:
  *         description: Something went wrong
  *         content:
- *           application/json:  
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
- *                 error: 
+ *                 error:
  *                   type: string
  */
 async function create(req, res) {
   try {
-    const { category_id, name, description, status, total_rating, image, price, discount } = req.body;
+    const {
+      category_id,
+      name,
+      description,
+      status,
+      total_rating,
+      image,
+      price,
+      discount,
+    } = req.body;
 
     if (!category_id || !name) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const course = await Course.create({ category_id, name, description, status, total_rating, image, price, discount });
+    const course = await Course.create({
+      category_id,
+      name,
+      description,
+      status,
+      total_rating,
+      image,
+      price,
+      discount,
+    });
 
     return res.status(201).json({
       message: "Course created successfully",
@@ -416,95 +430,104 @@ async function create(req, res) {
  * /api/courses/update:
  *   put:
  *     tags:
- *       - Courses  
+ *       - Courses
  *     summary: Update a course
  *     description: Update a course
  *     parameters:
  *       - name: id
  *         in: path
- *         required: true 
+ *         required: true
  *         type: number
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
- *           schema:  
+ *           schema:
  *             type: object
  *             properties:
  *               category_id:
  *                 type: number
  *               name:
- *                 type: string 
+ *                 type: string
  *               description:
  *                 type: string
  *               status:
  *                 type: string
  *               price:
- *                 type: number 
+ *                 type: number
  *               discount:
  *                 type: number
  *               image:
  *                 type: string
  *     responses:
- *       200: 
+ *       200:
  *         description: Course updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               properties:  
+ *               properties:
  *                 message:
  *                   type: string
  *                 course:
  *                   type: object
  *                     properties:
- *                       id:  
+ *                       id:
  *                         type: number
  *                       category_id:
  *                         type: number
  *                       name:
  *                         type: string
- *                       description: 
+ *                       description:
  *                         type: string
  *                       status:
  *                         type: string
  *                       price:
  *                         type: number
- *                       discount:  
+ *                       discount:
  *                         type: number
  *                       image:
  *                         type: string
  *                       createdAt:
  *                         type: string
- *                       updatedAt: 
+ *                       updatedAt:
  *                         type: string
  *       400:
  *         description: Validation failed
  *         content:
  *           application/json:
- *             schema:  
+ *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                 error:
- *                   type: string 
+ *                   type: string
  *       500:
  *         description: Something went wrong
  *         content:
  *           application/json:
  *             schema:
- *               type: object 
+ *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                 error:
  *                   type: string
- */ 
+ */
 async function update(req, res) {
   try {
     const { id } = req.params;
-    const { category_id, name, description, status, total_rating, image, price, discount } = req.body;
+    const {
+      category_id,
+      name,
+      description,
+      status,
+      total_rating,
+      image,
+      price,
+      discount,
+    } = req.body;
 
     if (!category_id || !name) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -513,7 +536,16 @@ async function update(req, res) {
     const course = await Course.findByPk(id);
     if (!course) return res.status(404).json({ message: "Course not found" });
 
-    await course.update({ category_id, name, description, status, total_rating, image, price, discount });
+    await course.update({
+      category_id,
+      name,
+      description,
+      status,
+      total_rating,
+      image,
+      price,
+      discount,
+    });
 
     return res.status(200).json({
       message: "Course updated successfully",
@@ -532,32 +564,32 @@ async function update(req, res) {
  * /api/courses/delete:
  *   delete:
  *     tags:
- *       - Courses  
- *     summary: Delete a course 
+ *       - Courses
+ *     summary: Delete a course
  *     description: Delete a course
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         type: number 
+ *         type: number
  *     responses:
  *       200:
  *         description: Course deleted successfully
  *         content:
  *           application/json:
- *             schema:  
+ *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *       404:
- *         description: Course not found  
+ *         description: Course not found
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message: 
+ *                 message:
  *                   type: string
  *                 error:
  *                   type: string
@@ -569,10 +601,63 @@ async function update(req, res) {
  *               type: object
  *               properties:
  *                 message:
- *                   type: string 
+ *                   type: string
  *                 error:
  *                   type: string
  */
+
+async function getCourseByReferenceCategoryId(req, res) {
+  // category_id or NaN
+  try {
+    const category_id = parseInt(req.params.category_id);
+    console.log(category_id);
+    if (!category_id) {
+      const course = await Course.findAll({
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: Category,
+            attributes: ["id", "name"],
+            as: "category",
+          },
+        ],
+      });
+      if (!course) return res.status(404).json({ message: "Course not found" });
+
+      return res.status(200).json({
+        message: `Get course by reference ID successfully`,
+        course,
+      });
+    } else {
+      const course = await Course.findAll({
+        where: {
+          category_id: category_id,
+        },
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: Category,
+            attributes: ["id", "name"],
+            as: "category",
+          },
+        ],
+      });
+      if (!course) return res.status(404).json({ message: "Course not found" });
+
+      return res.status(200).json({
+        message: `Get course by reference ID successfully`,
+        course,
+      });
+    }
+  } catch (error) {
+    console.error("Error getting course by reference ID:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+}
+
 async function remove(req, res) {
   try {
     const { id } = req.params;
@@ -592,13 +677,14 @@ async function remove(req, res) {
   }
 }
 
-module.exports = { 
-    index,
-    getAll, 
-    getById, 
-    getByIdCategory,
-    getByIdUser,
-    create, 
-    update, 
-    remove 
+module.exports = {
+  index,
+  getAll,
+  getById,
+  getByIdCategory,
+  getByIdUser,
+  create,
+  update,
+  remove,
+  getCourseByReferenceCategoryId,
 };
