@@ -15,6 +15,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "course_id",
         as: "enrollments",
       });
+
+      // Course có nhiều Sections
+      Course.hasMany(models.Section, {
+        foreignKey: "course_id",
+        as: "sections",
+      });
+
+      // Course có nhiều Comments
+      Course.hasMany(models.Comments, {
+        foreignKey: "course_id",
+        as: "comments",
+      });
     }
   }
 

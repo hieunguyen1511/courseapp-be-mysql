@@ -16,7 +16,7 @@
  *         createdAt:
  *           type: string
  *         updatedAt:
- *           type: string
+ *           type: string`
  *     AnswerInput:
  *       type: object
  *       required: ['question_id', 'content']
@@ -155,6 +155,10 @@
  *         title:
  *           type: string
  *         content:
+ *           type: string
+ *         duration:    
+ *           type: string
+ *         video_url:
  *           type: string
  *         createdAt:
  *           type: string

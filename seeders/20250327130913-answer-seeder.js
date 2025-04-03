@@ -14,6 +14,7 @@ module.exports = {
     */
    return queryInterface.bulkInsert('Answers', [
     {
+      id: 1,
       question_id: 1,
       content: "A. React Native là một framework phát triển ứng dụng di động mã nguồn mở được phát triển bởi Facebook.",
       is_correct: true,
@@ -21,6 +22,7 @@ module.exports = {
       updatedAt: new Date(),
     },
     {
+      id: 2,
       question_id: 1,
       content: "B. React Native là một framework phát triển ứng dụng web mã nguồn mở được phát triển bởi Google.",
       is_correct: false,
@@ -28,6 +30,7 @@ module.exports = {
       updatedAt: new Date(),
     },
     {
+      id: 3,
       question_id: 1,
       content: "C. React Native là một framework phát triển ứng dụng máy tính để bàn mã nguồn mở được phát triển bởi Microsoft.",
       is_correct: false,
@@ -35,6 +38,7 @@ module.exports = {
       updatedAt: new Date(),
     },
     {
+      id: 4,
       question_id: 1,
       content: "D. React Native là một framework phát triển ứng dụng di động mã nguồn đóng được phát triển bởi Apple.",
       is_correct: false,

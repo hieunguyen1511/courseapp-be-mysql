@@ -1,6 +1,7 @@
 const Validator = require("fastest-validator");
 const { resource } = require("../app");
 const models = require("../models");
+const { Op, sequelize } = require("sequelize");
 
 const Enrollment = models.Enrollment;
 const User = models.User;
@@ -13,6 +14,66 @@ const schema = {
   rating: { type: "number", optional: true, default: null },
   review: { type: "string", optional: true, default: null },
 };
+async function getMyCompletedEnrollments(req, res) {
+    try {
+    const { userId } = req.userData;
+    const enrollments = await Enrollment.findAll({
+      where: {
+        user_id: userId,
+        completed_at: { [Op.not]: null }
+      },
+      include: [
+        {
+          model: models.Course,
+          as: "course",
+          required: true,
+          include: [
+            {
+              model: models.Category,
+              as: "category",
+              required: true,
+            },
+          ],
+        },
+      ],
+      order: [['id', 'DESC']]
+    });
+    return res.status(200).json({ message: "Enrollments fetched successfully", enrollments });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching enrollments", error: error.message });
+  }
+}
+
+async function getMyInProgressEnrollments(req, res) {
+  try {
+    const { userId } = req.userData;
+    const enrollments = await Enrollment.findAll({
+      where: {
+        user_id: userId,
+        completed_at: { [Op.eq]: null }
+      },
+      include: [
+        {
+          model: models.Course,
+          as: "course",
+          required: true,
+          include: [
+            {
+              model: models.Category,
+              as: "category",
+              required: true,
+            },
+          ],
+        },
+      ],
+      order: [['id', 'DESC']]
+    });
+    return res.status(200).json({ message: "Enrollments fetched successfully", enrollments });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching enrollments", error: error.message });
+  }
+}
+
 
 function index(req, res) {
   const enrollment = "Enrollment";
@@ -72,7 +133,49 @@ function index(req, res) {
 async function getById(req, res) {
   try {
     const { id } = req.params;
-    const enrollment = await Enrollment.findByPk(id);
+    const enrollment = await Enrollment.findByPk(id, {
+      include: [
+        {
+          model: models.Course,
+          as: "course",
+          required: true,
+          include: [
+            {
+              model: models.Category,
+              as: "category",
+              required: true
+            },
+            {
+              model: models.Section,
+              as: "sections",
+              include: [
+                {
+                  model: models.Lesson,
+                  as: "lessons",
+                  order: [['id', 'ASC']]
+                },
+              ],
+            },
+            {
+              model: models.Comments,
+              as: "comments",
+              include: [
+                {
+                  model: models.User,
+                  as: "user",
+                  required: true,
+                },
+              ],
+            }
+          ],
+        },
+        {
+          model: models.EnrollmentLesson,
+          as: "enrollment_lessons",
+          attributes: ['lesson_id', 'completed_at'],
+        }
+      ],
+    });
 
     if (!enrollment) {
       return res.status(404).json({ message: "Enrollment not found" });
@@ -573,4 +676,6 @@ module.exports = {
   update,
   remove,
   getById_withCourse,
+  getMyInProgressEnrollments,
+  getMyCompletedEnrollments
 };

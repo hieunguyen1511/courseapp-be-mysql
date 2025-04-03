@@ -11,9 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Comments.belongsTo(sequelize.define('User'), {
-        foreignKey: 'user_id',
-        as: 'user'
+      // Comment thuộc về User
+      Comments.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+      });
+      // Comment thuộc về Course
+      Comments.belongsTo(models.Course, {
+        foreignKey: "course_id",
+        as: "course",
       });
     }
   }

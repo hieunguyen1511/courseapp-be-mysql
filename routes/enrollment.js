@@ -12,4 +12,7 @@ router.get('/getByUser/:user_id',checkAuth, enrollmentController.getByUser);
 router.put('/update/:id',checkAuth, enrollmentController.update);
 router.delete('/remove/:id',checkAuth, enrollmentController.remove);
 router.get('/getByIdWithCourse/:id',checkAuth, enrollmentController.getById_withCourse);
+router.get('/inProgress',checkAuth, enrollmentController.getMyInProgressEnrollments);
+router.get('/completed',checkAuth, enrollmentController.getMyCompletedEnrollments);
+
 module.exports = router;

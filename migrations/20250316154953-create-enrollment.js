@@ -45,6 +45,18 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
+      completed_at: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
+      completed_lesson_ids: {
+        type: Sequelize.JSON,
+        allowNull: true
+      },
+      last_access: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

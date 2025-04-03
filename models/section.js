@@ -11,9 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Section.hasMany(sequelize.define('Lesson'), {
-        foreignKey: 'section_id',
-        as: 'lessons'
+      // Section thuộc về Course
+      Section.belongsTo(models.Course, {
+        foreignKey: "course_id",
+        as: "course",
+      });
+      // Section có nhiều Lessons
+      Section.hasMany(models.Lesson, {
+        foreignKey: "section_id",
+        as: "lessons",
       });
     }
   }

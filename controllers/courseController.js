@@ -78,7 +78,85 @@ async function getAll(req, res) {
     });
   }
 }
+/**
+ * @openapi
+ * /api/courses/top-popular:
+ *   get:
+ *     tags:
+ *       - Courses
+ *     summary: Get top popular courses
+ *     description: Get top popular courses
+ *     parameters:
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Courses retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
+async function getPopularCourses(req, res) {
+  try {
+    const { limit } = req.query;
 
+    const courses = await Course.findAll({
+      attributes: [
+        'id',
+        'category_id',
+        'name',
+        'description',
+        'status',
+        'price',
+        'discount',
+        'image',
+        'total_rating',
+        'createdAt',
+        'updatedAt',
+        [sequelize.literal('(SELECT COUNT(1) FROM Enrollments WHERE Enrollments.course_id = Course.id)'), 'enrollment_count']
+      ],
+      include: [
+        {
+          model: Category,
+          attributes: ["id", "name"],
+          as: "category",
+        }
+      ],
+      order: [["total_rating", "DESC"]],
+      limit: parseInt(limit) || 5
+    });
+
+    return res.status(200).json({
+      message: "Get popular courses successfully",
+      courses,
+    });
+  } catch (error) {
+    console.error("Error getting all courses:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+}
 /**
  * @openapi
  * /api/courses/get-by-id:
@@ -304,6 +382,127 @@ async function getByIdUser(req, res) {
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
+    });
+  }
+}
+
+/**
+ * @openapi
+ * /api/courses/suggested:
+ *   get:
+ *     tags:
+ *       - Courses
+ *     summary: Get suggested courses for a user
+ *     description: Get personalized course suggestions based on user's interests and enrollment history
+ *     parameters:
+ *       - name: user_id
+ *         in: path
+ *         required: true
+ *         type: number
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Suggested courses retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       price:
+ *                         type: number
+ *                       total_rating:
+ *                         type: number
+ *                       enrollment_count:
+ *                         type: number
+ *       500:
+ *         description: Something went wrong
+ */
+async function getSuggestedCourses(req, res) {
+  try {
+    const { userId } = req.userData;
+    const { limit } = req.query;
+    console.log("Getting suggested courses for user:", userId);
+
+    // First get top categories using Sequelize
+    const topCategories = await Enrollment.findAll({
+      where: { user_id: userId },
+      attributes: [
+        [sequelize.fn('COUNT', sequelize.col('course.category_id')), 'count'],
+        [sequelize.col('course.category_id'), 'category_id'],
+        [sequelize.literal(`(SELECT COUNT(*) FROM Courses WHERE Courses.category_id = course.category_id)`), 'total_courses']
+      ],
+      include: [{
+        model: Course,
+        as: 'course',
+        attributes: []
+      }],
+      group: [sequelize.col('course.category_id')],
+      order: [[sequelize.fn('COUNT', sequelize.col('course.category_id')), 'DESC']],
+      raw: true
+    });
+
+    const categoryIds = topCategories.filter(cat => cat.total_courses > cat.count)
+    .slice(0, 2).map(cat => cat.category_id);
+
+    const courses = await Course.findAll({
+      where: {
+        ...(categoryIds.length > 0 ? {
+          category_id: { [Sequelize.Op.in]: categoryIds }
+        } : {}),
+        id: {
+          [Sequelize.Op.notIn]: sequelize.literal(`(
+            SELECT course_id 
+            FROM Enrollments 
+            WHERE user_id = ${userId}
+          )`)
+        }
+      },
+      attributes: [
+        'id',
+        'name',
+        'description',
+        'price',
+        'total_rating',
+        'image'
+      ],
+      include: [{
+        model: Category,
+        attributes: ['id', 'name'],
+        as: 'category'
+      }],
+      order: [
+        ['total_rating', 'DESC']
+      ],
+      limit: limit ? parseInt(limit) : 5
+    });
+
+    return res.status(200).json({
+      message: "Get suggested courses successfully",
+      courses
+    });
+
+  } catch (error) {
+    console.error("Error getting suggested courses:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+      stack: error.stack
     });
   }
 }
@@ -697,7 +896,7 @@ async function getCourseById_withCountEnrollment(req, res) {
             "enrollment_count",
           ],
         ],
-        
+
       },
       include: [
         {
@@ -711,7 +910,7 @@ async function getCourseById_withCountEnrollment(req, res) {
           as: "category",
         },
       ],
-      
+
       group: ["Course.id"],
     });
 
@@ -741,4 +940,6 @@ module.exports = {
   remove,
   getCourseByReferenceCategoryId,
   getCourseById_withCountEnrollment,
+getSuggestedCourses,
+getPopularCourses,
 };

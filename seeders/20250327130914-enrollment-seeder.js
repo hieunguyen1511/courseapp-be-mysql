@@ -12,6 +12,36 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+   return queryInterface.bulkInsert('Enrollments', [
+    {
+      id: 1,
+      user_id: 2,
+      course_id: 1,
+      complete_lesson: 1,
+      total_lesson: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 2,
+      user_id: 2,
+      course_id: 2,
+      complete_lesson: 1,
+      total_lesson: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 3,
+      user_id: 2,
+      course_id: 3,
+      complete_lesson: 0,
+      total_lesson: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+
+  ], {});
   },
 
   async down (queryInterface, Sequelize) {

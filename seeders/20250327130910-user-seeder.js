@@ -16,6 +16,7 @@ module.exports = {
 
     return queryInterface.bulkInsert("Users", [
       {
+        id: 1,
         username: "hieunguyen151103",
         password:
           "$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK",
@@ -29,6 +30,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        id: 2,
         username: "nrtnhab",
         password:
           "$2a$10$izNqEn2D.b7Sc.xNWHRT6uGlvH/CWsfMFHLtb8SeG7PXJR4fc4FS6",
@@ -42,6 +44,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        id: 4,
         username: "hieunguyen1511",
         password:
           "$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK",
@@ -54,9 +57,22 @@ module.exports = {
         createdAt: now,
         updatedAt: now,
       },
+      {
+        id: 5,
+        username: "linhtq",
+        email: "linhtq@gmail.com",
+        password:
+          "$2b$10$YSLjMdJeeqMuL0AOgqwZDevR1Pl6RFYbSC3jJ/EKnB.xg3ignFPcu",
+        fullname: "Linh Truong",
+        birth: "2003-08-02",
+        phone: "0000000000",
+        role: 1,
+        createdAt: now,
+        updatedAt: now,
+      }
     ], {});
   },
-  
+
   async down(queryInterface, Sequelize) {
     /**
      * Add commands to revert seed here.
