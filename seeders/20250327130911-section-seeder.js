@@ -19,7 +19,8 @@ module.exports = {
           id: 1,
           course_id: 1,
           name: 'Chương 1: Giới thiệu về React Native',
-          description: 'Giới thiệu về React Native và cách cài đặt môi trường phát triển',
+          description:
+            'Giới thiệu về React Native và cách cài đặt môi trường phát triển',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -27,7 +28,8 @@ module.exports = {
           id: 2,
           course_id: 1,
           name: 'Chương 2: Cài đặt môi trường phát triển',
-          description: 'Hướng dẫn cài đặt môi trường phát triển cho React Native',
+          description:
+            'Hướng dẫn cài đặt môi trường phát triển cho React Native',
           createdAt: new Date(),
           updatedAt: new Date(),
         },

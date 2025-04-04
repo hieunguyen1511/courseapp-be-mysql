@@ -128,15 +128,15 @@ async function getByIdCourse(req, res) {
       include: [
         {
           model: Lesson, // Include tất cả Lesson liên quan
-          as: "lessons", // Alias cho quan hệ (nếu có đặt trong model)
+          as: 'lessons', // Alias cho quan hệ (nếu có đặt trong model)
           include: [
             {
               model: Question,
-              as: "questions",
+              as: 'questions',
               include: [
                 {
                   model: Answer,
-                  as: "answers",
+                  as: 'answers',
                 },
               ],
             },
@@ -145,19 +145,15 @@ async function getByIdCourse(req, res) {
       ],
     });
 
-    return res
-      .status(200)
-      .json({
+    return res.status(200).json({
       message: 'Get sections and lessons by course successfully',
-      sections
+      sections,
     });
   } catch (error) {
     console.error('Get sections by course error:', error);
-    return res
-      .status(500)
-      .json({
+    return res.status(500).json({
       message: 'Something went wrong',
-      error: error.message
+      error: error.message,
     });
   }
 }
@@ -414,26 +410,36 @@ async function getByCourseId_withLesson(req, res) {
       include: [
         {
           model: Lesson,
-          as: "lessons",
-          attributes: ["id", "section_id", "title", "content", "createdAt", "updatedAt"],
+          as: 'lessons',
+          attributes: [
+            'id',
+            'section_id',
+            'title',
+            'content',
+            'createdAt',
+            'updatedAt',
+          ],
         },
       ],
     });
 
-    return res.status(200).json({ message: "Get sections by course successfully", sections });
+    return res
+      .status(200)
+      .json({ message: 'Get sections by course successfully', sections });
   } catch (error) {
-    console.error("Get sections by course error:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    console.error('Get sections by course error:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 
-
-module.exports = { 
-    index,
-    getAll, 
-    getByIdCourse,
-    create, 
-    update, 
-    remove,
-    getByCourseId_withLesson
+module.exports = {
+  index,
+  getAll,
+  getByIdCourse,
+  create,
+  update,
+  remove,
+  getByCourseId_withLesson,
 };

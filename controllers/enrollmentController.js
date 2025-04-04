@@ -327,7 +327,7 @@ async function getByCourse(req, res) {
       include: [
         {
           model: User,
-          as: "user",
+          as: 'user',
         },
       ],
     });

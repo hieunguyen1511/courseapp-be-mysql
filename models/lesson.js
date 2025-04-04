@@ -27,10 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         as: 'questions',
       });
 
-    Lesson.hasMany(models.Question, {
-        foreignKey: "lesson_id",
-        as: "questions",
-    });
+      Lesson.hasMany(models.Question, {
+        foreignKey: 'lesson_id',
+        as: 'questions',
+      });
     }
   }
   Lesson.init(

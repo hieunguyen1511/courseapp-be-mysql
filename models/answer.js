@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Answer.belongsTo(models.Question, {
-        foreignKey: "question_id",
-        as: "question",
+        foreignKey: 'question_id',
+        as: 'question',
       });
     }
   }

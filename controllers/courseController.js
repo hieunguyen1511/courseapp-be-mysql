@@ -295,8 +295,8 @@ async function getByIdCategory(req, res) {
       include: [
         {
           model: Category,
-          attributes: ["id", "name"],
-          as: "category",
+          attributes: ['id', 'name'],
+          as: 'category',
         },
       ],
     });
@@ -620,8 +620,7 @@ async function create(req, res) {
       image,
       price,
       discount,
-    } =
-      req.body;
+    } = req.body;
 
     if (!category_id || !name) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -753,8 +752,7 @@ async function update(req, res) {
       image,
       price,
       discount,
-    } =
-      req.body;
+    } = req.body;
 
     if (!category_id || !name) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -840,16 +838,16 @@ async function getCourseByReferenceCategoryId(req, res) {
     console.log(category_id);
     if (!category_id) {
       const course = await Course.findAll({
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         include: [
           {
             model: Category,
-            attributes: ["id", "name"],
-            as: "category",
+            attributes: ['id', 'name'],
+            as: 'category',
           },
         ],
       });
-      if (!course) return res.status(404).json({ message: "Course not found" });
+      if (!course) return res.status(404).json({ message: 'Course not found' });
 
       return res.status(200).json({
         message: `Get course by reference ID successfully`,
@@ -860,16 +858,16 @@ async function getCourseByReferenceCategoryId(req, res) {
         where: {
           category_id: category_id,
         },
-        order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'DESC']],
         include: [
           {
             model: Category,
-            attributes: ["id", "name"],
-            as: "category",
+            attributes: ['id', 'name'],
+            as: 'category',
           },
         ],
       });
-      if (!course) return res.status(404).json({ message: "Course not found" });
+      if (!course) return res.status(404).json({ message: 'Course not found' });
 
       return res.status(200).json({
         message: `Get course by reference ID successfully`,
@@ -877,9 +875,9 @@ async function getCourseByReferenceCategoryId(req, res) {
       });
     }
   } catch (error) {
-    console.error("Error getting course by reference ID:", error);
+    console.error('Error getting course by reference ID:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -911,38 +909,37 @@ async function getCourseById_withCountEnrollment(req, res) {
       attributes: {
         include: [
           [
-            sequelize.fn("COUNT", sequelize.col("enrollments.id")),
-            "enrollment_count",
+            sequelize.fn('COUNT', sequelize.col('enrollments.id')),
+            'enrollment_count',
           ],
         ],
-
       },
       include: [
         {
           model: Enrollment,
           attributes: [],
-          as: "enrollments",
+          as: 'enrollments',
         },
         {
           model: Category,
-          attributes: ["id", "name"],
-          as: "category",
+          attributes: ['id', 'name'],
+          as: 'category',
         },
       ],
 
-      group: ["Course.id"],
+      group: ['Course.id'],
     });
 
-    if (!course) return res.status(404).json({ message: "Course not found" });
+    if (!course) return res.status(404).json({ message: 'Course not found' });
 
     return res.status(200).json({
       message: `Get course by ID successfully`,
       course,
     });
   } catch (error) {
-    console.error("Error getting course by ID:", error);
+    console.error('Error getting course by ID:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -959,6 +956,6 @@ module.exports = {
   remove,
   getCourseByReferenceCategoryId,
   getCourseById_withCountEnrollment,
-getSuggestedCourses,
-getPopularCourses,
+  getSuggestedCourses,
+  getPopularCourses,
 };
