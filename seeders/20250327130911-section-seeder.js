@@ -17,6 +17,8 @@ module.exports = {
         course_id: 1,
         name: 'Section 1',
         description: 'Description for section 1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     ],{});
   },

@@ -18,22 +18,32 @@ module.exports = {
         {
           name: "Frontend",
           description: "Frontend Development",
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         {
           name: "Backend",
           description: "Backend Development",
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         {
           name: "Mobile",
           description: "Mobile Development",
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         {
           name: "DevOps",
           description: "DevOps",
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         {
           name: "UI/UX",
           description: "UI/UX",
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       ],
       {});
