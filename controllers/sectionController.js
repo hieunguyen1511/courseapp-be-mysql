@@ -1,18 +1,18 @@
-const Validator = require("fastest-validator");
-const { resource } = require("../app");
-const { Section, Lesson, Question, Answer } = require("../models");
+const Validator = require('fastest-validator');
+const { resource } = require('../app');
+const { Section, Lesson, Question, Answer } = require('../models');
 const v = new Validator();
 
 function index(req, res) {
-  const section = "phần";
-  res.send("Hello " + section);
+  const section = 'phần';
+  res.send('Hello ' + section);
 }
 /**
  * @openapi
  * /api/section/get-all:
  *  get:
  *     tags:
- *     - Section Controller 
+ *     - Section Controller
  *     description: Get all sections
  *     responses:
  *       200:
@@ -20,67 +20,6 @@ function index(req, res) {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 sections:  
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: number 
- *                       course_id:
- *                         type: number
- *                       name:
- *                         type: string
- *                       description:
- *                         type: string
- *                       createdAt:
- *                         type: string
- *                       updatedAt:
- *                         type: string
- *       500:
- *         description: Something went wrong  
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 error:
- *                   type: string
- */
-async function getAll(req, res) {
-  try {
-    const sections = await Section.findAll();
-    return res.status(200).json({ message: "Get all sections successfully", sections });
-  } catch (error) {
-    console.error("Get sections error:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
-  }
-}
-
-/**
- * @openapi
- * /api/section/get-by-course-id:
- *  get:
- *     tags:
- *     - Section Controller
- *     description: Get sections by course ID
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         type: number
- *     responses:
- *       200:
- *         description: Get sections by course ID successfully
- *         content:
- *           application/json:
- *             schema:  
  *               type: object
  *               properties:
  *                 message:
@@ -112,7 +51,72 @@ async function getAll(req, res) {
  *                 message:
  *                   type: string
  *                 error:
- *                   type: string 
+ *                   type: string
+ */
+async function getAll(req, res) {
+  try {
+    const sections = await Section.findAll();
+    return res
+      .status(200)
+      .json({ message: 'Get all sections successfully', sections });
+  } catch (error) {
+    console.error('Get sections error:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+/**
+ * @openapi
+ * /api/section/get-by-course-id:
+ *  get:
+ *     tags:
+ *     - Section Controller
+ *     description: Get sections by course ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Get sections by course ID successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 sections:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       course_id:
+ *                         type: number
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
  */
 async function getByIdCourse(req, res) {
   try {
@@ -141,16 +145,19 @@ async function getByIdCourse(req, res) {
       ],
     });
 
-    return res.status(200).json({ 
-      message: "Get sections and lessons by course successfully", 
-      sections 
+    return res
+      .status(200)
+      .json({
+      message: 'Get sections and lessons by course successfully',
+      sections
     });
-
   } catch (error) {
-    console.error("Get sections by course error:", error);
-    return res.status(500).json({ 
-      message: "Something went wrong", 
-      error: error.message 
+    console.error('Get sections by course error:', error);
+    return res
+      .status(500)
+      .json({
+      message: 'Something went wrong',
+      error: error.message
     });
   }
 }
@@ -160,7 +167,7 @@ async function getByIdCourse(req, res) {
  *  post:
  *     tags:
  *     - Section Controller
- *     description: Create a new section  
+ *     description: Create a new section
  *     requestBody:
  *       required: true
  *       content:
@@ -224,19 +231,26 @@ async function create(req, res) {
     const { course_id, name, description } = req.body;
 
     const schema = {
-      course_id: { type: "number", required: true },
-      name: { type: "string", required: true, max: 100 },
-      description: { type: "string", optional: true, max: 255 },
+      course_id: { type: 'number', required: true },
+      name: { type: 'string', required: true, max: 100 },
+      description: { type: 'string', optional: true, max: 255 },
     };
     const validate = v.validate({ course_id, name, description }, schema);
-    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
+    if (validate !== true)
+      return res
+        .status(400)
+        .json({ message: 'Validation failed', error: validate });
 
     const section = await Section.create({ course_id, name, description });
 
-    return res.status(201).json({ message: "Section created successfully", section });
+    return res
+      .status(201)
+      .json({ message: 'Section created successfully', section });
   } catch (error) {
-    console.error("Error creating section:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    console.error('Error creating section:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 /**
@@ -250,7 +264,7 @@ async function create(req, res) {
  *       - name: id
  *         in: path
  *         required: true
- *         type: number 
+ *         type: number
  *     responses:
  *       200:
  *         description: Section updated successfully
@@ -263,19 +277,19 @@ async function create(req, res) {
  *                   type: string
  *                 section:
  *                   type: object
- *                   properties:  
+ *                   properties:
  *                     id:
  *                       type: number
  *                     course_id:
  *                       type: number
  *                     name:
- *                       type: string 
+ *                       type: string
  *                     description:
  *                       type: string
  *       400:
  *         description: Validation failed
  *         content:
- *           application/json:  
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
@@ -301,25 +315,32 @@ async function update(req, res) {
     const { course_id, name, description } = req.body;
 
     const schema = {
-      course_id: { type: "number", required: true },
-      name: { type: "string", required: true, max: 100 },
-      description: { type: "string", optional: true, max: 255 },
+      course_id: { type: 'number', required: true },
+      name: { type: 'string', required: true, max: 100 },
+      description: { type: 'string', optional: true, max: 255 },
     };
     const validate = v.validate({ course_id, name, description }, schema);
-    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
+    if (validate !== true)
+      return res
+        .status(400)
+        .json({ message: 'Validation failed', error: validate });
 
     const section = await Section.findByPk(id);
-    if (!section) return res.status(404).json({ message: "Section not found" });
+    if (!section) return res.status(404).json({ message: 'Section not found' });
 
     section.course_id = course_id;
     section.name = name;
     section.description = description;
     await section.save();
 
-    return res.status(200).json({ message: "Section updated successfully", section });
+    return res
+      .status(200)
+      .json({ message: 'Section updated successfully', section });
   } catch (error) {
-    console.error("Error updated section:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    console.error('Error updated section:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 /**
@@ -328,7 +349,7 @@ async function update(req, res) {
  *  delete:
  *     tags:
  *     - Section Controller
- *     description: Delete a section  
+ *     description: Delete a section
  *     parameters:
  *       - name: id
  *         in: path
@@ -366,20 +387,22 @@ async function update(req, res) {
  *                   type: string
  *                 error:
  *                   type: string
- */       
+ */
 async function remove(req, res) {
   try {
     const { id } = req.params;
 
     const section = await Section.findByPk(id);
-    if (!section) return res.status(404).json({ message: "Section not found" });
+    if (!section) return res.status(404).json({ message: 'Section not found' });
 
     await section.destroy();
 
-    return res.status(200).json({ message: "Section deleted successfully" });
+    return res.status(200).json({ message: 'Section deleted successfully' });
   } catch (error) {
-    console.error("Error deleted error:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    console.error('Error deleted error:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 

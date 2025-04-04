@@ -1,19 +1,16 @@
-const Validator = require("fastest-validator");
-const { resource } = require("../app");
-const models = require("../models");
-
-
+const Validator = require('fastest-validator');
+const { resource } = require('../app');
+const models = require('../models');
 
 const schema = {
-  lesson_id: { type: "number", integer: true, required: true },
-  content: { type: "string", min: 1 },
-  note: { type: "string", min: 1 },
+  lesson_id: { type: 'number', integer: true, required: true },
+  content: { type: 'string', min: 1 },
+  note: { type: 'string', min: 1 },
 };
 
-
 function index(req, res) {
-  const question = "câu hỏi";
-  res.send("Hello " + question);
+  const question = 'câu hỏi';
+  res.send('Hello ' + question);
 }
 /**
  * @openapi
@@ -64,12 +61,12 @@ async function get_question_by_lesson(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Get questions by lesson successfully", questions });
+      .json({ message: 'Get questions by lesson successfully', questions });
   } catch (error) {
-    console.error("Error getting questions by lession:", error);
+    console.error('Error getting questions by lession:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 /**
@@ -111,25 +108,25 @@ async function get_question_by_lesson(req, res) {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- */ 
+ */
 async function getById(req, res) {
   try {
     const { id } = req.params;
     const question = await models.Question.findByPk(id);
 
     if (!question) {
-      return res.status(404).json({ message: "Question not found" });
+      return res.status(404).json({ message: 'Question not found' });
     }
 
-    return res.status(200).json({ 
-      message: "Get question by ID successfully", 
-      questions 
+    return res.status(200).json({
+      message: 'Get question by ID successfully',
+      questions,
     });
   } catch (error) {
-    console.error("Error getting question by ID:", error);
+    console.error('Error getting question by ID:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 /**
@@ -177,7 +174,7 @@ async function create(req, res) {
     const validationResponse = v.validate(req.body, schema);
     if (validationResponse !== true) {
       return res.status(400).json({
-        message: "Validation failed",
+        message: 'Validation failed',
         errors: validationResponse,
       });
     }
@@ -191,12 +188,12 @@ async function create(req, res) {
     });
     return res
       .status(201)
-      .json({ message: "Question created successfully", question });
+      .json({ message: 'Question created successfully', question });
   } catch (error) {
-    console.error("Error creating question:", error);
+    console.error('Error creating question:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 /**
@@ -253,12 +250,11 @@ async function create(req, res) {
  */
 async function update(req, res) {
   try {
-
     const v = new Validator();
     const validationResponse = v.validate(req.body, schema);
     if (validationResponse !== true) {
       return res.status(400).json({
-        message: "Validation failed",
+        message: 'Validation failed',
         errors: validationResponse,
       });
     }
@@ -268,21 +264,19 @@ async function update(req, res) {
 
     const question = await models.Question.findByPk(id);
     if (!question) {
-      return res.status(404).json({ message: "Question not found" });
+      return res.status(404).json({ message: 'Question not found' });
     }
-
-    
 
     await question.update({ lesson_id, content, note });
 
     return res
       .status(200)
-      .json({ message: "Question updated successfully", question });
+      .json({ message: 'Question updated successfully', question });
   } catch (error) {
-    console.error("Error updating question:", error);
+    console.error('Error updating question:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 /**
@@ -324,31 +318,31 @@ async function update(req, res) {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- */ 
+ */
 async function remove(req, res) {
   try {
     const { id } = req.params;
     const question = await models.Question.findByPk(id);
     if (!question) {
-      return res.status(404).json({ message: "Question not found" });
+      return res.status(404).json({ message: 'Question not found' });
     }
 
     await question.destroy();
 
-    return res.status(200).json({ message: "Question deleted successfully" });
+    return res.status(200).json({ message: 'Question deleted successfully' });
   } catch (error) {
-    console.error("Error deleting question:", error);
+    console.error('Error deleting question:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 
 module.exports = {
-    index,
-    get_question_by_lesson,
-    getById,
-    create,
-    update,
-    remove,
+  index,
+  get_question_by_lesson,
+  getById,
+  create,
+  update,
+  remove,
 };

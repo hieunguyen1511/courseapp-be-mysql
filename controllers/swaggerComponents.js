@@ -156,7 +156,7 @@
  *           type: string
  *         content:
  *           type: string
- *         duration:    
+ *         duration:
  *           type: string
  *         video_url:
  *           type: string
@@ -277,4 +277,4 @@
  *           type: string
  *         error:
  *           type: string
- */ 
+ */

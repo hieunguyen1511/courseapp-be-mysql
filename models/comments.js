@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Comments extends Model {
     /**
@@ -13,24 +11,27 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       // Comment thuộc về User
       Comments.belongsTo(models.User, {
-        foreignKey: "user_id",
-        as: "user",
+        foreignKey: 'user_id',
+        as: 'user',
       });
       // Comment thuộc về Course
       Comments.belongsTo(models.Course, {
-        foreignKey: "course_id",
-        as: "course",
+        foreignKey: 'course_id',
+        as: 'course',
       });
     }
   }
-  Comments.init({
-    user_id: DataTypes.INTEGER,
-    course_id: DataTypes.INTEGER,
-    content: DataTypes.TEXT,
-    parent_id: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Comments',
-  });
+  Comments.init(
+    {
+      user_id: DataTypes.INTEGER,
+      course_id: DataTypes.INTEGER,
+      content: DataTypes.TEXT,
+      parent_id: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: 'Comments',
+    },
+  );
   return Comments;
 };

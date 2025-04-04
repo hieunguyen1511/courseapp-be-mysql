@@ -1,31 +1,31 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Course extends Model {
     static associate(models) {
       // Course thuộc về Category
       Course.belongsTo(models.Category, {
-        foreignKey: "category_id",
-        as: "category",
+        foreignKey: 'category_id',
+        as: 'category',
       });
 
       // Course có nhiều Enrollments
       Course.hasMany(models.Enrollment, {
-        foreignKey: "course_id",
-        as: "enrollments",
+        foreignKey: 'course_id',
+        as: 'enrollments',
       });
 
       // Course có nhiều Sections
       Course.hasMany(models.Section, {
-        foreignKey: "course_id",
-        as: "sections",
+        foreignKey: 'course_id',
+        as: 'sections',
       });
 
       // Course có nhiều Comments
       Course.hasMany(models.Comments, {
-        foreignKey: "course_id",
-        as: "comments",
+        foreignKey: 'course_id',
+        as: 'comments',
       });
     }
   }
@@ -49,8 +49,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Course",
-    }
+      modelName: 'Course',
+    },
   );
 
   return Course;

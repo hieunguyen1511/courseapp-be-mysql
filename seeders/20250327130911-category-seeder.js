@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -13,45 +13,41 @@ module.exports = {
      * }], {});
      */
     return queryInterface.bulkInsert(
-      "Categories",
+      'Categories',
       [
         {
-          id: 1,
-          name: "Frontend",
-          description: "Frontend Development",
+          name: 'Frontend',
+          description: 'Frontend Development',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: 2,
-          name: "Backend",
-          description: "Backend Development",
+          name: 'Backend',
+          description: 'Backend Development',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: 3,
-          name: "Mobile",
-          description: "Mobile Development",
+          name: 'Mobile',
+          description: 'Mobile Development',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: 4,
-          name: "DevOps",
-          description: "DevOps",
+          name: 'DevOps',
+          description: 'DevOps',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: 5,
-          name: "UI/UX",
-          description: "UI/UX",
+          name: 'UI/UX',
+          description: 'UI/UX',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       ],
-      {});
+      {},
+    );
   },
 
   async down(queryInterface, Sequelize) {
@@ -61,6 +57,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete("Categories", null, {});
+    return queryInterface.bulkDelete('Categories', null, {});
   },
 };

@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Answer extends Model {
     /**
@@ -16,13 +14,16 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  Answer.init({
-    question_id: DataTypes.INTEGER,
-    content: DataTypes.TEXT,
-    is_correct: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'Answer',
-  });
+  Answer.init(
+    {
+      question_id: DataTypes.INTEGER,
+      content: DataTypes.TEXT,
+      is_correct: DataTypes.BOOLEAN,
+    },
+    {
+      sequelize,
+      modelName: 'Answer',
+    },
+  );
   return Answer;
 };

@@ -1,20 +1,20 @@
-const Validator = require("fastest-validator");
-const { resource } = require("../app");
-const models = require("../models");
+const Validator = require('fastest-validator');
+const { resource } = require('../app');
+const models = require('../models');
 
 const Comment = models.Comments;
 
 const v = new Validator();
 
 const schema = {
-  user_id: { type: "number", integer: true, required: true },
-  course_id: { type: "number", integer: true, required: true },
-  content: { type: "string", required: true, min: 1 },
+  user_id: { type: 'number', integer: true, required: true },
+  course_id: { type: 'number', integer: true, required: true },
+  content: { type: 'string', required: true, min: 1 },
 };
 
 function index(req, res) {
-  const comment = "Comment";
-  res.send("Hello " + comment);
+  const comment = 'Comment';
+  res.send('Hello ' + comment);
 }
 
 /**
@@ -56,22 +56,22 @@ function index(req, res) {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- */           
+ */
 async function getById(req, res) {
   try {
     const { id } = req.params;
     const comment = await Comment.findByPk(id);
     if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+      return res.status(404).json({ message: 'Comment not found' });
     }
     return res.status(200).json({
       message: `Get comment by ID successfully`,
       comment,
     });
   } catch (error) {
-    console.error("Error getting comment by ID:", error);
+    console.error('Error getting comment by ID:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -82,7 +82,7 @@ async function getById(req, res) {
  * /api/comments/get-by-course:
  *   get:
  *     tags:
- *       - Comments 
+ *       - Comments
  *     summary: Get comments by course ID
  *     description: Get comments by course ID
  *     parameters:
@@ -145,15 +145,24 @@ async function getById(req, res) {
 async function getByCourse(req, res) {
   try {
     const { course_id } = req.params;
-    const comments = await Comment.findAll({ where: { course_id } });
+    const comments = await Comment.findAll({
+      where: { course_id },
+      include: [
+        {
+          model: models.User,
+          as: 'user',
+          attributes: ['id', 'username', 'fullname', 'avatar'],
+        },
+      ],
+    });
     return res.status(200).json({
       message: `Get comments by course successfully`,
       comments,
     });
   } catch (error) {
-    console.error("Error getting comments by course:", error);
+    console.error('Error getting comments by course:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -164,61 +173,61 @@ async function getByCourse(req, res) {
  * /api/comments/get-by-user:
  *   get:
  *     tags:
- *       - Comments 
+ *       - Comments
  *     summary: Get comments by user ID
  *     description: Get comments by user ID
  *     parameters:
  *       - name: user_id
  *         in: path
- *         required: true 
+ *         required: true
  *         type: number
  *     responses:
  *       200:
  *         description: Comments found
  *         content:
- *           application/json:  
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 message:
  *                   type: string
- *                 comments:  
+ *                 comments:
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
  *                       id:
- *                         type: number 
+ *                         type: number
  *                       user_id:
  *                         type: number
  *                       course_id:
  *                         type: number
  *                       content:
- *                         type: string 
+ *                         type: string
  *                       parent_id:
  *                         type: number
  *                       createdAt:
  *                         type: string
  *                       updatedAt:
- *                         type: string 
+ *                         type: string
  *       404:
  *         description: Comments not found
  *         content:
  *           application/json:
  *             schema:
- *               type: object 
+ *               type: object
  *               properties:
  *                 message:
  *                   type: string
  *                 error:
  *                   type: string
- *       500: 
+ *       500:
  *         description: Something went wrong
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               properties:  
+ *               properties:
  *                 message:
  *                   type: string
  *                 error:
@@ -233,9 +242,9 @@ async function getByUser(req, res) {
       comments,
     });
   } catch (error) {
-    console.error("Error getting comments by user:", error);
+    console.error('Error getting comments by user:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -279,15 +288,16 @@ async function getByUser(req, res) {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- */                        
+ */
 async function create(req, res) {
   try {
-    const { user_id, course_id, content, parent_id } = req.body;
+    const { course_id, content, parent_id } = req.body;
+    const user_id = req.userData.userId;
     const validate = v.validate({ user_id, course_id, content }, schema);
     if (validate !== true)
       return res
         .status(400)
-        .json({ message: "Validation failed", error: validate });
+        .json({ message: 'Validation failed', error: validate });
     const comment = await Comment.create({
       user_id,
       course_id,
@@ -299,9 +309,9 @@ async function create(req, res) {
       comment,
     });
   } catch (error) {
-    console.error("Error creating comment:", error);
+    console.error('Error creating comment:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -367,18 +377,18 @@ async function update(req, res) {
     if (validate !== true)
       return res
         .status(400)
-        .json({ message: "Validation failed", error: validate });
+        .json({ message: 'Validation failed', error: validate });
     const comment = await Comment.findByPk(id);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
+    if (!comment) return res.status(404).json({ message: 'Comment not found' });
     await comment.update({ user_id, course_id, content, parent_id });
     return res.status(200).json({
       message: `Comment updated successfullly`,
       comment,
     });
   } catch (error) {
-    console.error("Error updating comment:", error);
+    console.error('Error updating comment:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -428,15 +438,15 @@ async function remove(req, res) {
   try {
     const { id } = req.params;
     const comment = await Comment.findByPk(id);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
+    if (!comment) return res.status(404).json({ message: 'Comment not found' });
     await comment.destroy();
     return res.status(200).json({
-      message: "Comment deleted successfully"
+      message: 'Comment deleted successfully',
     });
   } catch (error) {
-    console.error("Error deleting comment:", error);
+    console.error('Error deleting comment:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }

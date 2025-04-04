@@ -10,7 +10,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       course_id: {
         type: Sequelize.INTEGER,
@@ -28,46 +28,40 @@ module.exports = {
         },
         onDelete: 'CASCADE',
       },
-      total_lesson: {
-        type: Sequelize.INTEGER
-      },
-      complete_lesson: {
-        type: Sequelize.INTEGER
-      },
       price: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       rating: {
         type: Sequelize.FLOAT,
-        allowNull: true
+        allowNull: true,
       },
       review: {
         type: Sequelize.TEXT,
-        allowNull: true
+        allowNull: true,
       },
       completed_at: {
         type: Sequelize.DATE,
-        allowNull: true
+        allowNull: true,
       },
       completed_lesson_ids: {
         type: Sequelize.JSON,
-        allowNull: true
+        allowNull: true,
       },
       last_access: {
         type: Sequelize.DATE,
-        allowNull: true
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Enrollments');
-  }
+  },
 };

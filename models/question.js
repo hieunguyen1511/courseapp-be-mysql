@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Question extends Model {
     /**
@@ -10,23 +8,29 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      // define association here
+      // Question thuộc về Lesson
       Question.belongsTo(models.Lesson, {
-        foreignKey: "lesson_id",
-        as: "lesson",
+        foreignKey: 'lesson_id',
+        as: 'lesson',
       });
+      // Question có nhiều Answer
       Question.hasMany(models.Answer, {
-        foreignKey: "question_id",
-        as: "answers",
+        foreignKey: 'question_id',
+        as: 'answers',
       });
     }
   }
-  Question.init({
-    lesson_id: DataTypes.INTEGER,
-    content: DataTypes.TEXT,
-    note: DataTypes.TEXT
-  }, {
-    sequelize,
-    modelName: 'Question',
-  });
+  Question.init(
+    {
+      lesson_id: DataTypes.INTEGER,
+      content: DataTypes.TEXT,
+      note: DataTypes.TEXT,
+    },
+    {
+      sequelize,
+      modelName: 'Question',
+    },
+  );
   return Question;
 };

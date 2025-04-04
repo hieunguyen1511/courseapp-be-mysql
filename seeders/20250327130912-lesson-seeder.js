@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -13,9 +13,10 @@ module.exports = {
      * }], {});
      */
     return queryInterface.bulkInsert(
-      "Lessons",
+      'Lessons',
       [
         {
+            id: 1,
           section_id: 1,
           title: "Giới thiệu về React Native",
           content:
@@ -27,6 +28,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+            id: 2,
           section_id: 1,
           title: "Cài đặt môi trường phát triển",
           content:
@@ -38,6 +40,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+            id: 3,
           section_id: 2,
           title: "Cấu trúc dự án React Native",
           content:
@@ -49,6 +52,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+            id: 4,
           section_id: 2,
           title: "Tạo một ứng dụng React Native đầu tiên",
           content:
@@ -60,7 +64,7 @@ module.exports = {
           updatedAt: new Date(),
         },
       ],
-      {}
+      {},
     );
   },
 
@@ -71,6 +75,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete("Lessons", null, {});
+    return queryInterface.bulkDelete('Lessons', null, {});
   },
 };
