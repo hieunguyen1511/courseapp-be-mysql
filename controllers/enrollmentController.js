@@ -718,13 +718,13 @@ async function getById_withCourse(req, res) {
       include: [
         {
           model: models.Course,
-          as: "course",
+          as: 'course',
         },
       ],
     });
 
     if (!enrollment) {
-      return res.status(404).json({ message: "Enrollment not found" });
+      return res.status(404).json({ message: 'Enrollment not found' });
     }
 
     return res.status(200).json({
@@ -732,10 +732,10 @@ async function getById_withCourse(req, res) {
       enrollment,
     });
   } catch (error) {
-    console.error("Error getting enrollment by ID:", error);
+    console.error('Error getting enrollment by ID:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 

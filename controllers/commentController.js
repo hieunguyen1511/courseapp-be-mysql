@@ -452,7 +452,6 @@ async function remove(req, res) {
   }
 }
 
-
 async function getByCourseId_withUser(req, res) {
   try {
     const { course_id } = req.params;
@@ -461,8 +460,8 @@ async function getByCourseId_withUser(req, res) {
       include: [
         {
           model: models.User,
-          as: "user",
-          attributes: ["id", "fullname","username", "email", "avatar"],
+          as: 'user',
+          attributes: ['id', 'fullname', 'username', 'email', 'avatar'],
         },
       ],
     });
@@ -471,9 +470,9 @@ async function getByCourseId_withUser(req, res) {
       comments,
     });
   } catch (error) {
-    console.error("Error getting comments by course:", error);
+    console.error('Error getting comments by course:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
