@@ -14,5 +14,15 @@ router.put('/update/:id', checkAuth, courseController.update);
 router.delete('/remove/:id', checkAuth, courseController.remove);
 router.get('/top-popular', checkAuth, courseController.getPopularCourses);
 router.get('/suggested', checkAuth, courseController.getSuggestedCourses);
+router.get(
+  '/get/byReferenceCategory/:id',
+  checkAuth,
+  courseController.getCourseByReferenceCategoryId,
+);
+router.get(
+  '/get/byId_withCountEnrollment/:id',
+  checkAuth,
+  courseController.getCourseById_withCountEnrollment,
+);
 
 module.exports = router;

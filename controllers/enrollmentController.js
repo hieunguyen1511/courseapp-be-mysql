@@ -7,6 +7,11 @@ const Enrollment = models.Enrollment;
 const User = models.User;
 const v = new Validator();
 
+const USER_ROLE = {
+  ADMIN: 0,
+  USER: 1,
+};
+
 const schema = {
   course_id: { type: 'number', integer: true, required: true },
   user_id: { type: 'number', integer: true, required: true },
@@ -509,13 +514,20 @@ async function create(req, res) {
   try {
     const {
       course_id,
-      user_id,
+      user_id: inputUserId,
       total_lesson,
       complete_lesson,
       price,
       rating,
       review,
     } = req.body;
+
+    let user_id = inputUserId;
+    const { userId: authUserId, role: authUserRole } = req.userData;
+
+    if (authUserRole !== USER_ROLE.ADMIN) {
+      user_id = authUserId;
+    }
 
     const enrollment = await Enrollment.create({
       course_id,
