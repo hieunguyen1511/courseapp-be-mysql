@@ -24,7 +24,6 @@ module.exports = {
           total_rating: 0,
           price: 200000,
           discount: 0,
-
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -59,7 +58,6 @@ module.exports = {
           total_rating: 3,
           price: 200000,
           discount: 0,
-
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -72,7 +70,6 @@ module.exports = {
           total_rating: 2,
           price: 200000,
           discount: 0,
-
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -98,7 +95,6 @@ module.exports = {
           total_rating: 1,
           price: 200000,
           discount: 0,
-
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -123,7 +119,6 @@ module.exports = {
           total_rating: 4,
           price: 200000,
           discount: 0,
-
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -136,7 +131,6 @@ module.exports = {
           total_rating: 5,
           price: 200000,
           discount: 0,
-
           createdAt: new Date(),
           updatedAt: new Date(),
         },

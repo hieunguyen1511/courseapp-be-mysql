@@ -16,30 +16,35 @@ module.exports = {
       'Categories',
       [
         {
+          id: 1,
           name: 'Frontend',
           description: 'Frontend Development',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          id: 2,
           name: 'Backend',
           description: 'Backend Development',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          id: 3,
           name: 'Mobile',
           description: 'Mobile Development',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          id: 4,
           name: 'DevOps',
           description: 'DevOps',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          id: 5,
           name: 'UI/UX',
           description: 'UI/UX',
           createdAt: new Date(),
