@@ -16,7 +16,7 @@ module.exports = {
 
     return queryInterface.bulkInsert("Users", [
       {
-        username: "hieunguyen1511",
+        username: "hieunguyen151103",
         password:
           "$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK",
         fullname: "Nguyen Trong Hieu",
@@ -40,7 +40,20 @@ module.exports = {
         role: 0,
         createdAt: now,
         updatedAt: now,
-      }
+      },
+      {
+        username: "hieunguyen1511",
+        password:
+          "$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK",
+        fullname: "Nguyen Trong Hieu",
+        birth: "2003-11-15",
+        phone: "0969225580",
+        email: "hieunguyentronghieu69@gmail.com",
+        avatar: null,
+        role: 0,
+        createdAt: now,
+        updatedAt: now,
+      },
     ], {});
   },
   

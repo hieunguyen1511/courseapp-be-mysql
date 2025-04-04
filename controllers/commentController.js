@@ -17,6 +17,46 @@ function index(req, res) {
   res.send("Hello " + comment);
 }
 
+/**
+ * @openapi
+ * /api/comments/get-by-id:
+ *   get:
+ *     tags:
+ *       - Comments
+ *     summary: Get comment by ID
+ *     description: Get comment by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the comment to get
+ *     responses:
+ *       200:
+ *         description: Comment retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 comment:
+ *                   $ref: '#/components/schemas/Comment'
+ *       404:
+ *         description: Comment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */           
 async function getById(req, res) {
   try {
     const { id } = req.params;
@@ -37,6 +77,71 @@ async function getById(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /api/comments/get-by-course:
+ *   get:
+ *     tags:
+ *       - Comments 
+ *     summary: Get comments by course ID
+ *     description: Get comments by course ID
+ *     parameters:
+ *       - name: course_id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Comments found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 comments:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       user_id:
+ *                         type: number
+ *                       course_id:
+ *                         type: number
+ *                       content:
+ *                         type: string
+ *                       parent_id:
+ *                         type: number
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       404:
+ *         description: Comments not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function getByCourse(req, res) {
   try {
     const { course_id } = req.params;
@@ -54,6 +159,71 @@ async function getByCourse(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /api/comments/get-by-user:
+ *   get:
+ *     tags:
+ *       - Comments 
+ *     summary: Get comments by user ID
+ *     description: Get comments by user ID
+ *     parameters:
+ *       - name: user_id
+ *         in: path
+ *         required: true 
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Comments found
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 comments:  
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number 
+ *                       user_id:
+ *                         type: number
+ *                       course_id:
+ *                         type: number
+ *                       content:
+ *                         type: string 
+ *                       parent_id:
+ *                         type: number
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string 
+ *       404:
+ *         description: Comments not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object 
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500: 
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:  
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function getByUser(req, res) {
   try {
     const { user_id } = req.params;
@@ -71,6 +241,45 @@ async function getByUser(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /api/comments/create:
+ *   post:
+ *     tags:
+ *       - Comments
+ *     summary: Create a new comment
+ *     description: Create a new comment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CommentInput'
+ *     responses:
+ *       201:
+ *         description: Comment created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 comment:
+ *                   $ref: '#/components/schemas/Comment'
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */                        
 async function create(req, res) {
   try {
     const { user_id, course_id, content, parent_id } = req.body;
@@ -98,6 +307,58 @@ async function create(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /api/comments/update/{id}:
+ *   put:
+ *     tags:
+ *       - Comments
+ *     summary: Update a comment
+ *     description: Update a comment
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the comment to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CommentInput'
+ *     responses:
+ *       200:
+ *         description: Comment updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 comment:
+ *                   $ref: '#/components/schemas/Comment'
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Comment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 async function update(req, res) {
   try {
     const { id } = req.params;
@@ -123,6 +384,46 @@ async function update(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /api/comments/remove/{id}:
+ *   delete:
+ *     tags:
+ *       - Comments
+ *     summary: Delete a comment
+ *     description: Delete a comment
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the comment to delete
+ *     responses:
+ *       200:
+ *         description: Comment deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 comment:
+ *                   $ref: '#/components/schemas/Comment'
+ *       404:
+ *         description: Comment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 async function remove(req, res) {
   try {
     const { id } = req.params;

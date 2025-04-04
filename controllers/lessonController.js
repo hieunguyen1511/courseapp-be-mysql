@@ -15,7 +15,56 @@ function index(req, res) {
   const lesson = "bài học";
   res.send("Hello " + lesson);
 }
-
+/**
+ * @openapi
+ * /api/lesson/get-all:
+ *  get:
+ *     tags:
+ *     - Lesson Controller  
+ *     description: Get all lessons
+ *     responses:
+ *       200:
+ *         description: Get all lessons successfully
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 lessons: 
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number 
+ *                       section_id:
+ *                         type: number
+ *                       title:
+ *                         type: string
+ *                       content:
+ *                         type: string 
+ *                       is_quizz:
+ *                         type: boolean
+ *                       video_url:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string 
+ *                       updatedAt:
+ *                         type: string 
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error: 
+ *                   type: string
+ */
 async function getAll(req, res) {
   try {
     const lessons = await Lesson.findAll();
@@ -29,7 +78,61 @@ async function getAll(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/lesson/get-by-section-id:
+ *  get:
+ *     tags:
+ *     - Lesson Controller
+ *     description: Get lessons by section ID 
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Get lessons by section successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 lessons:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       section_id:
+ *                         type: number
+ *                       title:
+ *                         type: string
+ *                       content:
+ *                         type: string
+ *                       is_quizz:
+ *                         type: boolean
+ *                       video_url:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */               
 async function getByIdSection(req, res) {
   try {
     const { id } = req.params;
@@ -45,7 +148,78 @@ async function getByIdSection(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/lesson/create:
+ *  post:
+ *     tags:
+ *     - Lesson Controller
+ *     description: Create a new lesson 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object 
+ *             properties:
+ *               section_id:
+ *                 type: number
+ *               title:
+ *                 type: string
+ *               content: 
+ *                 type: string
+ *               is_quizz:
+ *                 type: boolean
+ *               video_url:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Lesson created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 lesson:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     section_id:
+ *                       type: number
+ *                     title:
+ *                       type: string
+ *                     content:
+ *                       type: string
+ *                     is_quizz:
+ *                       type: boolean
+ *                     video_url:
+ *                       type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */                 
 async function create(req, res) {
   try {
     const { section_id, title, content, is_quizz, video_url } = req.body;
@@ -77,7 +251,66 @@ async function create(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/lesson/update:
+ *  put:
+ *     tags:
+ *     - Lesson Controller
+ *     description: Update a lesson   
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Lesson updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 lesson:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     section_id:
+ *                       type: number
+ *                     title:
+ *                       type: string
+ *                     content:
+ *                       type: string
+ *                     is_quizz:
+ *                       type: boolean
+ *                     video_url:
+ *                       type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */                 
 async function update(req, res) {
   try {
     const { id } = req.params;
@@ -112,7 +345,40 @@ async function update(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/lesson/delete:
+ *  delete:
+ *     tags:
+ *     - Lesson Controller
+ *     description: Delete a lesson     
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Lesson deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Lesson not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */       
 async function remove(req, res) {
   try {
     const { id } = req.params;

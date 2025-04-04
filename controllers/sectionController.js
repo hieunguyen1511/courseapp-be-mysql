@@ -8,7 +8,52 @@ function index(req, res) {
   const section = "phần";
   res.send("Hello " + section);
 }
-
+/**
+ * @openapi
+ * /api/section/get-all:
+ *  get:
+ *     tags:
+ *     - Section Controller 
+ *     description: Get all sections
+ *     responses:
+ *       200:
+ *         description: Get all sections successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 sections:  
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number 
+ *                       course_id:
+ *                         type: number
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong  
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function getAll(req, res) {
   try {
     const sections = await Section.findAll();
@@ -19,6 +64,57 @@ async function getAll(req, res) {
   }
 }
 
+/**
+ * @openapi
+ * /api/section/get-by-course-id:
+ *  get:
+ *     tags:
+ *     - Section Controller
+ *     description: Get sections by course ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Get sections by course ID successfully
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 sections:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       course_id:
+ *                         type: number
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string 
+ */
 async function getByIdCourse(req, res) {
   try {
     const { id } = req.params;
@@ -59,7 +155,70 @@ async function getByIdCourse(req, res) {
     });
   }
 }
-
+/**
+ * @openapi
+ * /api/section/create:
+ *  post:
+ *     tags:
+ *     - Section Controller
+ *     description: Create a new section  
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               course_id:
+ *                 type: number
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Section created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 section:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     course_id:
+ *                       type: number
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 
 async function create(req, res) {
   try {
@@ -81,7 +240,62 @@ async function create(req, res) {
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/section/update:
+ *  put:
+ *     tags:
+ *     - Section Controller
+ *     description: Update a section
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number 
+ *     responses:
+ *       200:
+ *         description: Section updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 section:
+ *                   type: object
+ *                   properties:  
+ *                     id:
+ *                       type: number
+ *                     course_id:
+ *                       type: number
+ *                     name:
+ *                       type: string 
+ *                     description:
+ *                       type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function update(req, res) {
   try {
     const { id } = req.params;
@@ -109,7 +323,51 @@ async function update(req, res) {
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/section/delete:
+ *  delete:
+ *     tags:
+ *     - Section Controller
+ *     description: Delete a section  
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Section deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Section not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */       
 async function remove(req, res) {
   try {
     const { id } = req.params;

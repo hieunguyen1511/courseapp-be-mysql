@@ -15,8 +15,8 @@ module.exports = {
     return queryInterface.bulkInsert('Courses', [
       {
         category_id: 1,
-        name: 'Node.js',
-        description: 'Learn Node.js from scratch',
+        name: 'React Native Cơ Bản',
+        description: 'Khóa học React Native cơ bản', 
         status: 1,
         total_rating: 0,
         price: 200000,
@@ -25,9 +25,9 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        category_id: 1,
+        category_id: 2,
         name: 'Express.js',
-        description: 'Learn Express.js from scratch',
+        description: 'Học Express.js từ cơ bản đến nâng cao',
         status: 1,
         total_rating: 5,
         price: 200000,
@@ -36,9 +36,19 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        category_id: 1,
+        category_id: 2,
         name: 'Sequelize',
-        description: 'Learn Sequelize from scratch',
+        description: 'Học Sequelize từ cơ bản đến nâng cao',
+        status: 1,
+        price: 0,
+        discount: 0, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        category_id: 1,
+        name: 'React.js Cơ Bản',
+        description: 'Khóa học React.js cơ bản',
         status: 1,
         total_rating: 3,
         price: 200000,
@@ -112,6 +122,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      
     ], {});
   },
 

@@ -16,7 +16,56 @@ function index(req, res) {
   const user = "hieunguyen";
   res.send("Hello " + user);
 }
-
+/**
+ * @openapi
+ * /api/user/get-all: 
+ *  get:
+ *     tags:
+ *     - User Controller
+ *     description: Returns all users
+ *     responses:
+ *       200:
+ *         description: Get all users successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:     
+ *                   type: string
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:  
+ *                         type: number
+ *                       username:
+ *                         type: string
+ *                       fullname:
+ *                         type: string
+ *                       email:
+ *                         type: string 
+ *                       avatar:
+ *                         type: string
+ *                       role:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                       updatedAt:
+ *                         type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:  
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function getAll(req, res) {
   try {
     const users = await User.findAll({ include: ["enrollments", "comments"] });
@@ -31,6 +80,76 @@ async function getAll(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
+/**
+ * @openapi
+ * /api/user/register:    
+ *  post:
+ *     tags:
+ *     - User Controller
+ *     description: Returns API operational status
+ *     requestBody:
+ *       required: true 
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string   
+ *               password:
+ *                 type: string
+ *               fullname:
+ *                 type: string
+ *               birth:
+ *                 type: string 
+ *               phone:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               avatar:
+ *                 type: string 
+ *               role:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     username:
+ *                       type: string
+ *       400:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 
 async function register(req, res) {
   try {
@@ -88,7 +207,57 @@ async function register(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/user/login:
+ *  post:
+ *     tags:
+ *     - User Controller
+ *     description: Returns API operational status
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     username:
+ *                       type: string
+ *                 access_token:
+ *                   type: string
+ *                 refresh_token:
+ *                   type: string
+ *       500: 
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function login(req, res) {
   try {
     const { username, password } = req.body;
@@ -132,7 +301,70 @@ async function login(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/user/get-by-id:
+ *  get:
+ *     tags:
+ *     - User Controller
+ *     description: Returns user by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Get user by ID successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     username:
+ *                       type: string
+ *                     fullname:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     avatar:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                     updatedAt:
+ *                       type: string
+ *       404:
+ *         description: User not found  
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong  
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function getById(req, res) {
   try {
     const { id } = req.params;
@@ -150,7 +382,70 @@ async function getById(req, res) {
       .json({ message: "Something went wrong", error: error.message });
   }
 }
-
+/**
+ * @openapi
+ * /api/user/update:
+ *  put:
+ *     tags:
+ *     - User Controller  
+ *     description: Returns API operational status
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+  *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                     username:
+ *                       type: string
+ *                     fullname:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     avatar:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                     updatedAt:
+ *                       type: string
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 async function update(req, res) {
   try {
     const { id } = req.params;
