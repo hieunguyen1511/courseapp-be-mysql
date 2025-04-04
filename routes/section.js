@@ -12,5 +12,6 @@ router.get('/all',checkAuth,sectionController.getAll);
 router.get('/getByCourse/:id',checkAuth, sectionController.getByIdCourse);
 router.put('/update/:id',checkAuth, sectionController.update);
 router.delete('/remove/:id',checkAuth, sectionController.remove);
+router.get('/getByCourseId_withLesson/:course_id',checkAuth, sectionController.getByCourseId_withLesson);
 
 module.exports = router;

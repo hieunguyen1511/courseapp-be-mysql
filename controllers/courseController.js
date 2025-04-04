@@ -207,7 +207,16 @@ async function getById(req, res) {
 async function getByIdCategory(req, res) {
   try {
     const { id } = req.params;
-    const courses = await Course.findAll({ where: { category_id: id } });
+    const courses = await Course.findAll({
+      where: { category_id: id },
+      include: [
+        {
+          model: Category,
+          attributes: ["id", "name"],
+          as: "category",
+        },
+      ],
+    });
     return res.status(200).json({
       message: `Get courses by category successfully`,
       courses,
@@ -677,6 +686,50 @@ async function remove(req, res) {
   }
 }
 
+async function getCourseById_withCountEnrollment(req, res) {
+  try {
+    const { id } = req.params;
+    const course = await Course.findByPk(id, {
+      attributes: {
+        include: [
+          [
+            sequelize.fn("COUNT", sequelize.col("enrollments.id")),
+            "enrollment_count",
+          ],
+        ],
+        
+      },
+      include: [
+        {
+          model: Enrollment,
+          attributes: [],
+          as: "enrollments",
+        },
+        {
+          model: Category,
+          attributes: ["id", "name"],
+          as: "category",
+        },
+      ],
+      
+      group: ["Course.id"],
+    });
+
+    if (!course) return res.status(404).json({ message: "Course not found" });
+
+    return res.status(200).json({
+      message: `Get course by ID successfully`,
+      course,
+    });
+  } catch (error) {
+    console.error("Error getting course by ID:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   index,
   getAll,
@@ -687,4 +740,5 @@ module.exports = {
   update,
   remove,
   getCourseByReferenceCategoryId,
+  getCourseById_withCountEnrollment,
 };

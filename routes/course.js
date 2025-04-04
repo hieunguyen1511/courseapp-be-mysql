@@ -12,7 +12,8 @@ router.get("/getByCategory/:id", checkAuth, courseController.getByIdCategory);
 router.get("/getByUser/:id", checkAuth, courseController.getByIdUser);
 router.put("/update/:id", checkAuth, courseController.update);
 router.delete("/remove/:id", checkAuth, courseController.remove);
-router.get("/get/byReferenceCategory/:category_id",checkAuth,courseController.getCourseByReferenceCategoryId
-);
+router.get("/get/byReferenceCategory/:category_id",checkAuth,courseController.getCourseByReferenceCategoryId);
+router.get("/get/byId_withCountEnrollment/:id",checkAuth,courseController.getCourseById_withCountEnrollment);
+
 
 module.exports = router;

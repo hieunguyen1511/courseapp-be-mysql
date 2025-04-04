@@ -3,6 +3,7 @@ const { resource } = require("../app");
 const models = require("../models");
 
 const Enrollment = models.Enrollment;
+const User = models.User;
 const v = new Validator();
 
 const schema = {
@@ -148,6 +149,12 @@ async function getByCourse(req, res) {
     const { course_id } = req.params;
     const enrollments = await Enrollment.findAll({
       where: { course_id: course_id },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
     });
 
     return res

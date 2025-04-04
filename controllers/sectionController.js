@@ -354,6 +354,27 @@ async function remove(req, res) {
   }
 }
 
+async function getByCourseId_withLesson(req, res) {
+  try {
+    const { course_id } = req.params;
+    const sections = await Section.findAll({
+      where: { course_id: course_id },
+      include: [
+        {
+          model: models.Lesson,
+          as: "lessons",
+          attributes: ["id", "section_id", "title", "content", "createdAt", "updatedAt"],
+        },
+      ],
+    });
+
+    return res.status(200).json({ message: "Get sections by course successfully", sections });
+  } catch (error) {
+    console.error("Get sections by course error:", error);
+    return res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+}
+
 
 module.exports = { 
     index,
@@ -361,5 +382,6 @@ module.exports = {
     getByIdCourse,
     create, 
     update, 
-    remove 
+    remove,
+    getByCourseId_withLesson
 };
