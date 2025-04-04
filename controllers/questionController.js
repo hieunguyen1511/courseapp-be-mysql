@@ -7,7 +7,6 @@ const models = require("../models");
 const schema = {
   lesson_id: { type: "number", integer: true, required: true },
   content: { type: "string", min: 1 },
-  note: { type: "string", min: 1 },
 };
 
 
