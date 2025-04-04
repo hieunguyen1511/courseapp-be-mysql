@@ -1,7 +1,6 @@
 const Validator = require("fastest-validator");
 const { resource } = require("../app");
-const models = require("../models");
-const { Section, Lesson } = require("../models");
+const { Section, Lesson, Question, Answer } = require("../models");
 const v = new Validator();
 
 function index(req, res) {
