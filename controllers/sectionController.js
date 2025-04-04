@@ -390,7 +390,7 @@ async function getByCourseId_withLesson(req, res) {
       where: { course_id: course_id },
       include: [
         {
-          model: models.Lesson,
+          model: Lesson,
           as: "lessons",
           attributes: ["id", "section_id", "title", "content", "createdAt", "updatedAt"],
         },

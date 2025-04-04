@@ -536,6 +536,34 @@ async function remove(req, res) {
   }
 }
 
+async function getById_withCourse(req, res) {
+  try {
+    const { id } = req.params;
+    const enrollment = await Enrollment.findByPk(id, {
+      include: [
+        {
+          model: models.Course,
+          as: "course",
+        },
+      ],
+    });
+
+    if (!enrollment) {
+      return res.status(404).json({ message: "Enrollment not found" });
+    }
+
+    return res.status(200).json({
+      message: `Get enrollment by ID successfully`,
+      enrollment,
+    });
+  } catch (error) {
+    console.error("Error getting enrollment by ID:", error);
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
+  }
+}
+
 module.exports = {
   index,
   getById,
@@ -544,4 +572,5 @@ module.exports = {
   create,
   update,
   remove,
+  getById_withCourse,
 };

@@ -442,6 +442,33 @@ async function remove(req, res) {
   }
 }
 
+
+async function getByCourseId_withUser(req, res) {
+  try {
+    const { course_id } = req.params;
+    const comments = await Comment.findAll({
+      where: { course_id },
+      include: [
+        {
+          model: models.User,
+          as: "user",
+          attributes: ["id", "fullname","username", "email", "avatar"],
+        },
+      ],
+    });
+    return res.status(200).json({
+      message: `Get comments by course successfully`,
+      comments,
+    });
+  } catch (error) {
+    console.error("Error getting comments by course:", error);
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   index,
   getById,
@@ -450,4 +477,5 @@ module.exports = {
   create,
   update,
   remove,
+  getByCourseId_withUser,
 };

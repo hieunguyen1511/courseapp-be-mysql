@@ -11,5 +11,5 @@ router.get('/getByCourse/:course_id',checkAuth, enrollmentController.getByCourse
 router.get('/getByUser/:user_id',checkAuth, enrollmentController.getByUser);
 router.put('/update/:id',checkAuth, enrollmentController.update);
 router.delete('/remove/:id',checkAuth, enrollmentController.remove);
-
+router.get('/getByIdWithCourse/:id',checkAuth, enrollmentController.getById_withCourse);
 module.exports = router;

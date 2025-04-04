@@ -13,5 +13,5 @@ router.get('/getByUser/:user_id',checkAuth, commentController.getByUser);
 router.post('/create',checkAuth, commentController.create);
 router.put('/update/:id',checkAuth, commentController.update);
 router.delete('/remove/:id',checkAuth, commentController.remove);
-
+router.get('/getByCourseWithUser/:course_id',checkAuth, commentController.getByCourseId_withUser);
 module.exports = router;
