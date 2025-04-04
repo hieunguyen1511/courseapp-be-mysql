@@ -1,7 +1,6 @@
 const Validator = require("fastest-validator");
 const { resource } = require("../app");
-const models = require("../models");
-const Section = models.Section;
+const { Section, Lesson, Question, Answer } = require("../models");
 const v = new Validator();
 
 function index(req, res) {
@@ -118,12 +117,41 @@ async function getAll(req, res) {
 async function getByIdCourse(req, res) {
   try {
     const { id } = req.params;
-    const sections = await Section.findAll({ where: { course_id: id } });
 
-    return res.status(200).json({ message: "Get sections by course successfully", sections });
+    // Tìm tất cả Sections thuộc Course
+    const sections = await Section.findAll({
+      where: { course_id: id },
+      include: [
+        {
+          model: Lesson, // Include tất cả Lesson liên quan
+          as: "lessons", // Alias cho quan hệ (nếu có đặt trong model)
+          include: [
+            {
+              model: Question,
+              as: "questions",
+              include: [
+                {
+                  model: Answer,
+                  as: "answers",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.status(200).json({ 
+      message: "Get sections and lessons by course successfully", 
+      sections 
+    });
+
   } catch (error) {
     console.error("Get sections by course error:", error);
-    return res.status(500).json({ message: "Something went wrong", error: error.message });
+    return res.status(500).json({ 
+      message: "Something went wrong", 
+      error: error.message 
+    });
   }
 }
 /**
@@ -190,6 +218,7 @@ async function getByIdCourse(req, res) {
  *                 error:
  *                   type: string
  */
+
 async function create(req, res) {
   try {
     const { course_id, name, description } = req.body;
