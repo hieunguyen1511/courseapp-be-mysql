@@ -1,5 +1,5 @@
-const swaggerJsdoc = require('swagger-jsdoc')
-const swaggerUi = require('swagger-ui-express')
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 const options = {
   definition: {
@@ -19,23 +19,23 @@ const options = {
         url: 'http://localhost:3636',
         description: 'Local Server',
       },
-    ]
+    ],
   },
   // looks for configuration in specified directories
   apis: ['./controllers/*.js'],
-}
+};
 
-const swaggerSpec = swaggerJsdoc(options)
+const swaggerSpec = swaggerJsdoc(options);
 
 function swaggerDocs(app) {
   // Swagger Page
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // Documentation in JSON format
   app.get('/docs.json', (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
-    res.send(swaggerSpec)
-  })
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+  });
 }
 
-module.exports = swaggerDocs
+module.exports = swaggerDocs;

@@ -4,7 +4,7 @@ const port = 3636;
 
 const swaggerDocs = require('./swagger');
 
-swaggerDocs(app)
+swaggerDocs(app);
 
 const server = http.createServer(app);
 

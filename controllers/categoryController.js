@@ -1,14 +1,14 @@
-const Validator = require("fastest-validator");
-const { resource } = require("../app");
-const models = require("../models");
-const { Sequelize } = require("sequelize");
+const Validator = require('fastest-validator');
+const { resource } = require('../app');
+const models = require('../models');
+const { Sequelize } = require('sequelize');
 
 const Category = models.Category;
 const v = new Validator();
 
 function index(req, res) {
-  const category = "chủ đề";
-  res.send("Hello " + category);
+  const category = 'chủ đề';
+  res.send('Hello ' + category);
 }
 
 /**
@@ -235,13 +235,13 @@ async function getAll(req, res) {
     });
 
     return res.status(200).json({
-      message: "Get all categories successfully",
+      message: 'Get all categories successfully',
       categories,
     });
   } catch (error) {
-    console.error("Error getting all categories:", error);
+    console.error('Error getting all categories:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -250,7 +250,7 @@ async function getAll(req, res) {
 async function getById(req, res) {
   try {
     const { id } = req.params;
-    
+
     const category = await Category.findOne({
       where: { id },
       attributes: [
@@ -269,7 +269,7 @@ async function getById(req, res) {
     });
 
     if (!category) {
-      return res.status(404).json({ message: "Category not found" });
+      return res.status(404).json({ message: 'Category not found' });
     }
 
     return res.status(200).json({
@@ -277,9 +277,9 @@ async function getById(req, res) {
       category,
     });
   } catch (error) {
-    console.error("Error getting category by ID:", error);
+    console.error('Error getting category by ID:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -290,22 +290,25 @@ async function create(req, res) {
     const { name, description } = req.body;
 
     const schema = {
-      name: { type: "string", min: 3, max: 50, required: true },
-      description: { type: "string", max: 255, required: false },
+      name: { type: 'string', min: 3, max: 50, required: true },
+      description: { type: 'string', max: 255, required: false },
     };
     const validate = v.validate({ name, description }, schema);
-    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
+    if (validate !== true)
+      return res
+        .status(400)
+        .json({ message: 'Validation failed', error: validate });
 
     const category = await Category.create({ name, description });
 
     return res.status(201).json({
-      message: "Category created successfully",
+      message: 'Category created successfully',
       category,
     });
   } catch (error) {
-    console.error("Error creating category:", error);
+    console.error('Error creating category:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -317,25 +320,29 @@ async function update(req, res) {
     const { name, description } = req.body;
 
     const schema = {
-      name: { type: "string", min: 3, max: 50, required: true },
-      description: { type: "string", max: 255, required: false },
+      name: { type: 'string', min: 3, max: 50, required: true },
+      description: { type: 'string', max: 255, required: false },
     };
     const validate = v.validate({ name, description }, schema);
-    if (validate !== true) return res.status(400).json({ message: "Validation failed", error: validate });
-    
+    if (validate !== true)
+      return res
+        .status(400)
+        .json({ message: 'Validation failed', error: validate });
+
     const category = await Category.findByPk(id);
-    if (!category) return res.status(404).json({ message: "Category not found" });
+    if (!category)
+      return res.status(404).json({ message: 'Category not found' });
 
     await category.update({ name, description });
 
     return res.status(200).json({
-      message: "Category updated successfully",
+      message: 'Category updated successfully',
       category,
     });
   } catch (error) {
-    console.error("Error updating category:", error);
+    console.error('Error updating category:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
@@ -347,26 +354,26 @@ async function remove(req, res) {
 
     const category = await Category.findByPk(id);
     if (!category) {
-      return res.status(404).json({ message: "Category not found" });
+      return res.status(404).json({ message: 'Category not found' });
     }
 
     await category.destroy();
 
-    return res.status(200).json({ message: "Category deleted successfully" });
+    return res.status(200).json({ message: 'Category deleted successfully' });
   } catch (error) {
-    console.error("Error deleting category:", error);
+    console.error('Error deleting category:', error);
     return res.status(500).json({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: error.message,
     });
   }
 }
 
-module.exports = { 
-    index,
-    getAll, 
-    getById, 
-    create, 
-    update, 
-    remove 
+module.exports = {
+  index,
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
 };

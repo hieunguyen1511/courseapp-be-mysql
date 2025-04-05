@@ -7,7 +7,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       question_id: {
         type: Sequelize.INTEGER,
@@ -18,22 +18,22 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       content: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       is_correct: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Answers');
-  }
+  },
 };

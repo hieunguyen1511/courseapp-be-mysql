@@ -1,16 +1,16 @@
-const Validator = require("fastest-validator");
-const { resource } = require("../app");
-const models = require("../models");
+const Validator = require('fastest-validator');
+const { resource } = require('../app');
+const models = require('../models');
 
-const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Answer = models.Answer;
 
 const schema = {
-  question_id: { type: "number", integer: true, required: true },
-  content: { type: "string", min: 1 },
-  is_correct: { type: "boolean" },
+  question_id: { type: 'number', integer: true, required: true },
+  content: { type: 'string', min: 1 },
+  is_correct: { type: 'boolean' },
 };
 
 /**
@@ -62,8 +62,8 @@ const schema = {
  */
 
 function index(req, res) {
-  const answer = "Đáp án";
-  res.send("Hello " + answer);
+  const answer = 'Đáp án';
+  res.send('Hello ' + answer);
 }
 
 /**
@@ -136,17 +136,15 @@ async function getByQuestion(req, res) {
       where: { question_id: question_id },
     });
 
-    return res
-      .status(200)
-      .json({ 
-        message: "Get answers by question successfully", 
-        answers 
-      });
+    return res.status(200).json({
+      message: 'Get answers by question successfully',
+      answers,
+    });
   } catch (error) {
-    console.error("Error getting answers by question:", error);
+    console.error('Error getting answers by question:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 
@@ -196,7 +194,7 @@ async function getById(req, res) {
     const answer = await Answer.findByPk(id);
 
     if (!answer) {
-      return res.status(404).json({ message: "Answer not found" });
+      return res.status(404).json({ message: 'Answer not found' });
     }
 
     return res.status(200).json({
@@ -204,10 +202,10 @@ async function getById(req, res) {
       answer,
     });
   } catch (error) {
-    console.error("Error getting answer by ID:", error);
+    console.error('Error getting answer by ID:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 
@@ -216,7 +214,7 @@ async function getById(req, res) {
  * /api/answers/create:
  *   post:
  *     tags:
- *       - Answers  
+ *       - Answers
  *     summary: Create a new answer
  *     description: Create a new answer
  *     requestBody:
@@ -227,18 +225,18 @@ async function getById(req, res) {
  *             $ref: '#/components/schemas/AnswerInput'
  *     responses:
  *       201:
- *         description: Answer created successfully 
+ *         description: Answer created successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message: 
+ *                 message:
  *                   type: string
  *                 answer:
  *                   $ref: '#/components/schemas/Answer'
  *       400:
- *         description: Validation failed 
+ *         description: Validation failed
  *         content:
  *           application/json:
  *             schema:
@@ -256,7 +254,7 @@ async function create(req, res) {
     const validationResponse = v.validate(req.body, schema);
     if (validationResponse !== true) {
       return res.status(400).json({
-        message: "Validation failed",
+        message: 'Validation failed',
         errors: validationResponse,
       });
     }
@@ -270,12 +268,12 @@ async function create(req, res) {
     });
     return res
       .status(201)
-      .json({ message: "Answer created successfully", answer });
+      .json({ message: 'Answer created successfully', answer });
   } catch (error) {
-    console.error("Error creating answer:", error);
+    console.error('Error creating answer:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 
@@ -284,7 +282,7 @@ async function create(req, res) {
  * /api/answers/update:
  *   put:
  *     tags:
- *       - Answers  
+ *       - Answers
  *     summary: Update an answer
  *     description: Update an answer
  *     parameters:
@@ -339,7 +337,7 @@ async function update(req, res) {
     const answer = await Answer.findByPk(id);
 
     if (!answer) {
-      return res.status(404).json({ message: "Answer not found" });
+      return res.status(404).json({ message: 'Answer not found' });
     }
 
     answer.question_id = question_id;
@@ -350,12 +348,12 @@ async function update(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Answer updated successfully", answer });
+      .json({ message: 'Answer updated successfully', answer });
   } catch (error) {
-    console.error("Error updating answer:", error);
+    console.error('Error updating answer:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 
@@ -364,7 +362,7 @@ async function update(req, res) {
  * /api/answers/remove:
  *   delete:
  *     tags:
- *       - Answers  
+ *       - Answers
  *     summary: Delete an answer
  *     description: Delete an answer
  *     parameters:
@@ -401,23 +399,23 @@ async function update(req, res) {
  */
 async function remove(req, res) {
   try {
-    const { id } = req.params;  
+    const { id } = req.params;
     const answer = await Answer.findByPk(id);
 
     if (!answer) {
-      return res.status(404).json({ message: "Answer not found" });
+      return res.status(404).json({ message: 'Answer not found' });
     }
 
     await answer.destroy();
 
     return res
       .status(200)
-      .json({ message: "Remove answer successfully", answer });
+      .json({ message: 'Remove answer successfully', answer });
   } catch (error) {
-    console.error("Error removing answer:", error);
+    console.error('Error removing answer:', error);
     return res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: 'Something went wrong', error: error.message });
   }
 }
 

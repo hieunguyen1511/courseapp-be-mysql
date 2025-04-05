@@ -9,3 +9,5 @@ config/
 
 # Environment variables
 .env
+
+.idea/

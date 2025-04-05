@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:up": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo:all",
     "seed": "npx sequelize-cli db:seed:all",
-    "dev": "nodemon server.js"
+    "seed:undo": "npx sequelize-cli db:seed:undo:all",
+    "dev": "nodemon server.js",
+    "format": "prettier --write ."
   },
   "author": "hieunguyen1511",
   "license": "ISC",
@@ -24,5 +27,8 @@
     "sequelize": "^6.37.6",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }
