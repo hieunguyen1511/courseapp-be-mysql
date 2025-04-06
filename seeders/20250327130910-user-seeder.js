@@ -18,7 +18,7 @@ module.exports = {
       'Users',
       [
         {
-          id: 1,
+          //id: 1,
           username: 'hieunguyen151103',
           password:
             '$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK',
@@ -32,7 +32,7 @@ module.exports = {
           updatedAt: now,
         },
         {
-          id: 2,
+          //id: 2,
           username: 'nrtnhab',
           password:
             '$2a$10$izNqEn2D.b7Sc.xNWHRT6uGlvH/CWsfMFHLtb8SeG7PXJR4fc4FS6',
@@ -46,7 +46,7 @@ module.exports = {
           updatedAt: now,
         },
         {
-          id: 4,
+          //id: 4,
           username: 'hieunguyen1511',
           password:
             '$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK',
@@ -60,7 +60,7 @@ module.exports = {
           updatedAt: now,
         },
         {
-          id: 5,
+          //id: 5,
           username: 'linhtq',
           email: 'linhtq@gmail.com',
           password:

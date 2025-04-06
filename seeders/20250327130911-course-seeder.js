@@ -16,7 +16,7 @@ module.exports = {
       'Courses',
       [
         {
-          id: 1,
+          //id: 1,
           category_id: 1,
           name: 'React Native Cơ Bản',
           description: 'Khóa học React Native cơ bản',
@@ -28,7 +28,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
+          //id: 2,
           category_id: 2,
           name: 'Express.js',
           description: 'Học Express.js từ cơ bản đến nâng cao',
@@ -50,7 +50,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 3,
+          //id: 3,
           category_id: 1,
           name: 'React.js Cơ Bản',
           description: 'Khóa học React.js cơ bản',
@@ -62,7 +62,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 4,
+          //id: 4,
           category_id: 2,
           name: 'React.js',
           description: 'Learn React.js from scratch',
@@ -74,7 +74,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 5,
+          //id: 5,
           category_id: 2,
           name: 'Redux',
           description: 'Learn Redux from scratch',
@@ -87,7 +87,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 6,
+          //id: 6,
           category_id: 2,
           name: 'React Native',
           description: 'Learn React Native from scratch',
@@ -99,7 +99,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 7,
+          //id: 7,
           category_id: 3,
           name: 'HTML',
           description: 'Learn HTML from scratch',
@@ -111,7 +111,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 8,
+          //id: 8,
           category_id: 3,
           name: 'CSS',
           description: 'Learn CSS from scratch',
@@ -123,7 +123,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 9,
+          //id: 9,
           category_id: 3,
           name: 'JavaScript',
           description: 'Learn JavaScript from scratch',
