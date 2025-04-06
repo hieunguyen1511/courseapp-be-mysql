@@ -16,5 +16,6 @@ router.get(
   checkAuth,
   sectionController.getByCourseId_withLesson,
 );
+router.get('/getByIdCourseWithLessons/:id', checkAuth, sectionController.getByIdCourseWithLessons);
 
 module.exports = router;

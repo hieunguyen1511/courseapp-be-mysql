@@ -434,6 +434,34 @@ async function getByCourseId_withLesson(req, res) {
   }
 }
 
+async function getByIdCourseWithLessons(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Tìm tất cả Sections thuộc Course
+    const sections = await Section.findAll({
+      where: { course_id: id },
+      include: [
+        {
+          model: Lesson, // Include tất cả Lesson liên quan
+          as: 'lessons', // Alias cho quan hệ (nếu có đặt trong model)
+        },
+      ],
+    });
+
+    return res.status(200).json({
+      message: 'Get sections and lessons by course successfully',
+      sections,
+    });
+  } catch (error) {
+    console.error('Get sections by course error:', error);
+    return res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   index,
   getAll,
@@ -442,4 +470,5 @@ module.exports = {
   update,
   remove,
   getByCourseId_withLesson,
+  getByIdCourseWithLessons,
 };

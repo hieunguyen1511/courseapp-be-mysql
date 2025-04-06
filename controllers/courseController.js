@@ -609,6 +609,8 @@ async function getSuggestedCourses(req, res) {
  *                 error:
  *                   type: string
  */
+
+
 async function create(req, res) {
   try {
     const {

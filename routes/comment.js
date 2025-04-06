@@ -16,4 +16,5 @@ router.get(
   checkAuth,
   commentController.getByCourseId_withUser,
 );
+router.get('/getByIDWithUser/:id', checkAuth, commentController.getByID_withUser);
 module.exports = router;

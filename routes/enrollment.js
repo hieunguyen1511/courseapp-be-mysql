@@ -30,5 +30,6 @@ router.get(
   checkAuth,
   enrollmentController.getMyCompletedEnrollments,
 );
+router.get('/getByCourseWithUserEnrollmentLessons/:course_id', checkAuth, enrollmentController.getByCourseWithUserEnrollmentLessons);
 
 module.exports = router;

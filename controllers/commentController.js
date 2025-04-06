@@ -461,16 +461,46 @@ async function getByCourseId_withUser(req, res) {
         {
           model: models.User,
           as: 'user',
-          attributes: ['id', 'fullname', 'username', 'email', 'avatar'],
+          attributes: ['id', 'fullname', 'username', 'email', 'avatar', 'role'],
         },
       ],
+      order: [['createdAt', 'DESC']], // Sắp xếp theo trường createdAt, DESC để sắp xếp từ mới đến cũ
     });
     return res.status(200).json({
-      message: `Get comments by course successfully`,
+      message: 'Get comments by course successfully',
       comments,
     });
   } catch (error) {
     console.error('Error getting comments by course:', error);
+    return res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+}
+
+
+async function getByID_withUser(req, res) {
+  try {
+    const { id } = req.params;
+    const comment = await Comment.findByPk(id, {
+      include: [
+        {
+          model: models.User,
+          as: 'user',
+          attributes: ['id', 'fullname', 'username', 'email', 'avatar', 'role'],
+        },
+      ],
+    });
+    if (!comment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    return res.status(200).json({
+      message: `Get comment by id with user successfully`,
+      comment,
+    });
+  } catch (error) {
+    console.error('Error getting comment by id:', error);
     return res.status(500).json({
       message: 'Something went wrong',
       error: error.message,
@@ -487,4 +517,5 @@ module.exports = {
   update,
   remove,
   getByCourseId_withUser,
+  getByID_withUser,
 };

@@ -5,6 +5,8 @@ const { Op, Sequelize } = require('sequelize');
 
 const Enrollment = models.Enrollment;
 const User = models.User;
+const EnrollmentLesson = models.EnrollmentLesson;
+const lesson = models.lesson;
 const v = new Validator();
 
 const USER_ROLE = {
@@ -751,6 +753,38 @@ async function getById_withCourse(req, res) {
   }
 }
 
+async function getByCourseWithUserEnrollmentLessons(req, res) {
+  try {
+    const { course_id } = req.params;
+
+    const enrollments = await Enrollment.findAll({
+      where: { course_id },
+      include: [
+        {
+          model: User,
+          as: 'user',
+        },
+        {
+          model: EnrollmentLesson,
+          as: 'enrollment_lessons', // alias phải đúng trong define
+        },
+      ],
+    });
+
+    return res.status(200).json({
+      message: 'Get enrollments with lessons by course successfully',
+      enrollments,
+    });
+  } catch (error) {
+    console.error('Error getting enrollments with lessons:', error);
+    return res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+}
+
+
 module.exports = {
   index,
   getById,
@@ -762,4 +796,5 @@ module.exports = {
   getById_withCourse,
   getMyInProgressEnrollments,
   getMyCompletedEnrollments,
+  getByCourseWithUserEnrollmentLessons,
 };
