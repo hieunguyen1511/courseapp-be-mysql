@@ -271,12 +271,24 @@ async function login(req, res) {
       return res.status(401).json({ message: 'Invalid username or password' });
 
     const access_token = jwt.sign(
-      { username: user.username, userId: user.id, role: user.role },
+      {
+        username: user.username,
+        userId: user.id,
+        role: user.role,
+        fullname: user.fullname,
+        email: user.email,
+      },
       process.env.JWT_KEY,
       { expiresIn: '1h' },
     );
     const refresh_token = jwt.sign(
-      { username: user.username, userId: user.id, role: user.role },
+      {
+        username: user.username,
+        userId: user.id,
+        role: user.role,
+        fullname: user.fullname,
+        email: user.email,
+      },
       process.env.JWT_KEY,
       { expiresIn: '7d' },
     );

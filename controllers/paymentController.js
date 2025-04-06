@@ -5,7 +5,6 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 async function createPayment(req, res) {
   const { userId } = req.userData;
   const { courseId } = req.body;
-
   const course = await Course.findByPk(courseId);
   if (!course) {
     return res.status(404).json({ error: 'Course not found' });
