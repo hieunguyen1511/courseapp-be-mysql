@@ -22,6 +22,7 @@ module.exports = {
           model: 'Enrollments',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       lesson_id: {
         type: Sequelize.INTEGER,
@@ -29,6 +30,7 @@ module.exports = {
           model: 'Lessons',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       completed_at: {
         type: Sequelize.DATE,

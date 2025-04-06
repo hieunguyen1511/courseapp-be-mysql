@@ -16,7 +16,7 @@ module.exports = {
       'Answers',
       [
         {
-          id: 1,
+          //id: 1,
           question_id: 1,
           content:
             'A. React Native là một framework phát triển ứng dụng di động mã nguồn mở được phát triển bởi Facebook.',
@@ -25,7 +25,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
+          //id: 2,
           question_id: 1,
           content:
             'B. React Native là một framework phát triển ứng dụng web mã nguồn mở được phát triển bởi Google.',
@@ -34,7 +34,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 3,
+          //id: 3,
           question_id: 1,
           content:
             'C. React Native là một framework phát triển ứng dụng máy tính để bàn mã nguồn mở được phát triển bởi Microsoft.',
@@ -43,7 +43,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 4,
+          //id: 4,
           question_id: 1,
           content:
             'D. React Native là một framework phát triển ứng dụng di động mã nguồn đóng được phát triển bởi Apple.',

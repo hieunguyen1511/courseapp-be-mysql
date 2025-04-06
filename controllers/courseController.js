@@ -834,9 +834,10 @@ async function update(req, res) {
 async function getCourseByReferenceCategoryId(req, res) {
   // category_id or NaN
   try {
-    const category_id = parseInt(req.params.category_id);
+    const category_id = parseInt(req.params.id);
     console.log(category_id);
     if (!category_id) {
+      console.log('category_id is NaN');
       const course = await Course.findAll({
         order: [['createdAt', 'DESC']],
         include: [
@@ -854,6 +855,7 @@ async function getCourseByReferenceCategoryId(req, res) {
         course,
       });
     } else {
+      console.log('category_id is number');
       const course = await Course.findAll({
         where: {
           category_id: category_id,

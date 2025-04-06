@@ -16,7 +16,7 @@ module.exports = {
       'Sections',
       [
         {
-          id: 1,
+          //id: 1,
           course_id: 1,
           name: 'Chương 1: Giới thiệu về React Native',
           description:
@@ -25,7 +25,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
+          //id: 2,
           course_id: 1,
           name: 'Chương 2: Cài đặt môi trường phát triển',
           description:
@@ -34,7 +34,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 3,
+          //id: 3,
           course_id: 1,
           name: 'Chương 3: Các thành phần cơ bản',
           description: 'Giới thiệu về các thành phần cơ bản trong React Native',
@@ -42,9 +42,8 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 4,
+          //id: 4,
           course_id: 1,
-
           name: 'Chương 4: Tạo ứng dụng đầu tiên',
           description: 'Hướng dẫn tạo ứng dụng đầu tiên với React Native',
           createdAt: new Date(),

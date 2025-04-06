@@ -18,7 +18,7 @@ module.exports = {
       'Users',
       [
         {
-          id: 1,
+          //id: 1,
           username: 'hieunguyen151103',
           password:
             '$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK',
@@ -26,13 +26,13 @@ module.exports = {
           birth: '2003-11-15',
           phone: '0969225580',
           email: 'hieunguyentronghieu69@gmail.com',
-          avatar: null,
+          avatar: 'https://avatar.iran.liara.run/public/37',
           role: 1,
           createdAt: now,
           updatedAt: now,
         },
         {
-          id: 2,
+          //id: 2,
           username: 'nrtnhab',
           password:
             '$2a$10$izNqEn2D.b7Sc.xNWHRT6uGlvH/CWsfMFHLtb8SeG7PXJR4fc4FS6',
@@ -40,13 +40,13 @@ module.exports = {
           birth: '2003-08-20',
           phone: '0967657011',
           email: 'pkbinhchuannrtnhab@gmail.com',
-          avatar: null,
+          avatar: 'https://avatar.iran.liara.run/public/38',
           role: 0,
           createdAt: now,
           updatedAt: now,
         },
         {
-          id: 4,
+          //id: 4,
           username: 'hieunguyen1511',
           password:
             '$2b$10$3crqhanUc8KYjaJHmzNAB.O2G7YGw4JWTJYhlt48F3wyJ9qfHmWEK',
@@ -54,13 +54,13 @@ module.exports = {
           birth: '2003-11-15',
           phone: '0969225580',
           email: 'hieunguyentronghieu69@gmail.com',
-          avatar: null,
+          avatar: 'https://avatar.iran.liara.run/public/39',
           role: 0,
           createdAt: now,
           updatedAt: now,
         },
         {
-          id: 5,
+          //id: 5,
           username: 'linhtq',
           email: 'linhtq@gmail.com',
           password:
@@ -68,6 +68,7 @@ module.exports = {
           fullname: 'Linh Truong',
           birth: '2003-08-02',
           phone: '0000000000',
+          avatar: 'https://avatar.iran.liara.run/public/41',
           role: 1,
           createdAt: now,
           updatedAt: now,

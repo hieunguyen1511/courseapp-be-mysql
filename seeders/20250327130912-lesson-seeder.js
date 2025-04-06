@@ -16,7 +16,7 @@ module.exports = {
       'Lessons',
       [
         {
-          id: 1,
+          //id: 1,
           section_id: 1,
           title: 'Giới thiệu về React Native',
           content:
@@ -28,7 +28,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
+          //id: 2,
           section_id: 1,
           title: 'Cài đặt môi trường phát triển',
           content:
@@ -40,7 +40,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 3,
+         // id: 3,
           section_id: 2,
           title: 'Cấu trúc dự án React Native',
           content:
@@ -52,7 +52,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 4,
+          //id: 4,
           section_id: 2,
           title: 'Tạo một ứng dụng React Native đầu tiên',
           content:

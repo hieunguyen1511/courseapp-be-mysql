@@ -43,10 +43,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-      completed_lesson_ids: {
-        type: Sequelize.JSON,
-        allowNull: true,
-      },
       last_access: {
         type: Sequelize.DATE,
         allowNull: true,
