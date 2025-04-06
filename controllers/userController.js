@@ -272,6 +272,7 @@ async function login(req, res) {
 
     const access_token = jwt.sign(
       {
+        grantType: 'access_token',
         username: user.username,
         userId: user.id,
         role: user.role,
@@ -283,11 +284,7 @@ async function login(req, res) {
     );
     const refresh_token = jwt.sign(
       {
-        username: user.username,
-        userId: user.id,
-        role: user.role,
-        fullname: user.fullname,
-        email: user.email,
+        grantType: 'refresh_token',
       },
       process.env.JWT_KEY,
       { expiresIn: '7d' },
@@ -541,7 +538,14 @@ async function refreshToken(req, res) {
           .status(401)
           .json({ message: 'Invalid or expired refresh token' });
       const access_token = jwt.sign(
-        { username: user.username, userId: user.id, role: user.role },
+        {
+          grantType: 'access_token',
+          username: user.username,
+          userId: user.id,
+          role: user.role,
+          fullname: user.fullname,
+          email: user.email,
+        },
         process.env.JWT_KEY,
         { expiresIn: '1h' },
       );
