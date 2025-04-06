@@ -751,6 +751,55 @@ async function getById_withCourse(req, res) {
   }
 }
 
+async function updateEnrollment_with_rating_review(req, res) {
+  try {
+    const { id, rating, review } = req.body;
+
+    const enrollment = await Enrollment.findByPk(id);
+    if (!enrollment) {
+      return res.status(404).json({ message: 'Enrollment not found' });
+    }
+
+    await enrollment.update({
+      rating,
+      review,
+    });
+
+    return res
+      .status(200)
+      .json({ message: 'Enrollment updated successfully', enrollment });
+  } catch (error) {
+    console.error('Error updating enrollment:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+async function getEnrollmentByUserId_JWT(req, res) {
+  try {
+    const { userId } = req.userData;
+    const enrollments = await Enrollment.findAll({
+      where: { user_id: userId },
+      include: [
+        {
+          model: models.Course,
+          as: 'course',
+        },
+      ],
+    });
+
+    return res
+      .status(200)
+      .json({ message: 'Get enrollments by user successfully', enrollments });
+  } catch (error) {
+    console.error('Error getting enrollments by user:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
 module.exports = {
   index,
   getById,
@@ -762,4 +811,6 @@ module.exports = {
   getById_withCourse,
   getMyInProgressEnrollments,
   getMyCompletedEnrollments,
+  updateEnrollment_with_rating_review,
+  getEnrollmentByUserId_JWT,
 };
