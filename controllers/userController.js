@@ -271,12 +271,21 @@ async function login(req, res) {
       return res.status(401).json({ message: 'Invalid username or password' });
 
     const access_token = jwt.sign(
-      { username: user.username, userId: user.id, role: user.role },
+      {
+        grantType: 'access_token',
+        username: user.username,
+        userId: user.id,
+        role: user.role,
+        fullname: user.fullname,
+        email: user.email,
+      },
       process.env.JWT_KEY,
       { expiresIn: '1h' },
     );
     const refresh_token = jwt.sign(
-      { username: user.username, userId: user.id, role: user.role },
+      {
+        grantType: 'refresh_token',
+      },
       process.env.JWT_KEY,
       { expiresIn: '7d' },
     );
@@ -529,7 +538,14 @@ async function refreshToken(req, res) {
           .status(401)
           .json({ message: 'Invalid or expired refresh token' });
       const access_token = jwt.sign(
-        { username: user.username, userId: user.id, role: user.role },
+        {
+          grantType: 'access_token',
+          username: user.username,
+          userId: user.id,
+          role: user.role,
+          fullname: user.fullname,
+          email: user.email,
+        },
         process.env.JWT_KEY,
         { expiresIn: '1h' },
       );
@@ -539,6 +555,36 @@ async function refreshToken(req, res) {
     });
   } catch (error) {
     console.error('Refresh token error:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+async function logout(req, res) {
+  try {
+    const { refresh_token } = req.body;
+    if (!refresh_token)
+      return res.status(400).json({ message: 'Refresh token is required' });
+
+    const userToken = await UserToken.findOne({
+      where: { refresh_token: refresh_token },
+    });
+    if (!userToken)
+      return res.status(404).json({ message: 'Refresh token not found' });
+
+    jwt.destroy(refresh_token, (error) => {
+      if (error)
+        return res
+          .status(401)
+          .json({ message: 'Invalid or expired refresh token' });
+    });
+    await UserToken.update(
+      { refresh_token: null },
+      { where: { user_id: userToken.user_id } },
+    );
+    return res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    console.error('Logout error:', error);
     return res
       .status(500)
       .json({ message: 'Something went wrong', error: error.message });
@@ -554,4 +600,5 @@ module.exports = {
   update,
   remove,
   refreshToken,
+  logout,
 };
