@@ -289,11 +289,20 @@ async function login(req, res) {
       process.env.JWT_KEY,
       { expiresIn: '7d' },
     );
-
-    await UserToken.update(
-      { refresh_token: refresh_token },
-      { where: { user_id: user.id } },
-    );
+    const userToken = await UserToken.findOne({
+      where: { user_id: user.id },
+    });
+    if (!userToken) {
+      await UserToken.create({
+        user_id: user.id,
+        refresh_token: refresh_token,
+      });
+    } else {
+      await UserToken.update(
+        { refresh_token: refresh_token },
+        { where: { user_id: user.id } },
+      );
+    }
 
     return res.status(200).json({
       message: 'Authentication successful',

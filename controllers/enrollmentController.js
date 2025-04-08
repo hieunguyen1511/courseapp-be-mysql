@@ -428,6 +428,32 @@ async function getByUser(req, res) {
       .json({ message: 'Something went wrong', error: error.message });
   }
 }
+
+async function getByUserId_JWT(req, res) {
+  try {
+    const { userId } = req.userData;
+    const enrollments = await Enrollment.findAll({
+      include: [
+        {
+          model: models.Course,
+          as: 'course',
+          required: true,
+        },
+      ],
+      where: { user_id: userId },
+    });
+
+    return res
+      .status(200)
+      .json({ message: `Get enrollments by user successfully`, enrollments });
+  } catch (error) {
+    console.error('Error getting enrollments by user:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
 /**
  * @openapi
  * /api/enrollment/create:
@@ -820,7 +846,7 @@ async function getEnrollmentByUserId_JWT(req, res) {
         },
       ],
     });
-  
+
     return res
       .status(200)
       .json({ message: 'Get enrollments by user successfully', enrollments });
@@ -846,4 +872,5 @@ module.exports = {
   getByCourseWithUserEnrollmentLessons,
   updateEnrollment_with_rating_review,
   getEnrollmentByUserId_JWT,
+  getByUserId_JWT,
 };

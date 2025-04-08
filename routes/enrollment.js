@@ -30,7 +30,11 @@ router.get(
   checkAuth,
   enrollmentController.getMyCompletedEnrollments,
 );
-router.get('/getByCourseWithUserEnrollmentLessons/:course_id', checkAuth, enrollmentController.getByCourseWithUserEnrollmentLessons);
+router.get(
+  '/getByCourseWithUserEnrollmentLessons/:course_id',
+  checkAuth,
+  enrollmentController.getByCourseWithUserEnrollmentLessons,
+);
 
 router.post(
   '/updateEnrollmentWithRatingReview',
@@ -42,5 +46,6 @@ router.get(
   checkAuth,
   enrollmentController.getEnrollmentByUserId_JWT,
 );
+router.get('/getByUserId_JWT', checkAuth, enrollmentController.getByUserId_JWT);
 
 module.exports = router;
