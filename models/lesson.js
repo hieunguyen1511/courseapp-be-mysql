@@ -34,7 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       content: DataTypes.TEXT,
       is_quizz: DataTypes.BOOLEAN,
-      duration: DataTypes.TEXT,
       video_url: DataTypes.TEXT,
     },
     {

@@ -23,9 +23,6 @@ module.exports = {
       content: {
         type: Sequelize.TEXT,
       },
-      duration: {
-        type: Sequelize.TEXT,
-      },
       is_quizz: {
         type: Sequelize.BOOLEAN,
       },
