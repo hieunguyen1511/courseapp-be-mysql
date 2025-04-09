@@ -47,5 +47,9 @@ router.get(
   enrollmentController.getEnrollmentByUserId_JWT,
 );
 router.get('/getByUserId_JWT', checkAuth, enrollmentController.getByUserId_JWT);
-
+router.get(
+  '/getByUserWithCourseAndCategory/:id',
+  checkAuth,
+  enrollmentController.getByUserWithCourseAndCategory,
+);
 module.exports = router;

@@ -779,36 +779,6 @@ async function getById_withCourse(req, res) {
   }
 }
 
-async function getByCourseWithUserEnrollmentLessons(req, res) {
-  try {
-    const { course_id } = req.params;
-
-    const enrollments = await Enrollment.findAll({
-      where: { course_id },
-      include: [
-        {
-          model: User,
-          as: 'user',
-        },
-        {
-          model: EnrollmentLesson,
-          as: 'enrollment_lessons', // alias phải đúng trong define
-        },
-      ],
-    });
-    return res.status(200).json({
-      message: 'Get enrollments with lessons by course successfully',
-      enrollments,
-    });
-  } catch (error) {
-    console.error('Error getting enrollments with lessons:', error);
-    return res.status(500).json({
-      message: 'Something went wrong',
-      error: error.message,
-    });
-  }
-}
-
 async function updateEnrollment_with_rating_review(req, res) {
   try {
     const { id, rating, review } = req.body;
@@ -857,6 +827,122 @@ async function getEnrollmentByUserId_JWT(req, res) {
       .json({ message: 'Something went wrong', error: error.message });
   }
 }
+async function getByUserWithCourseAndCategory(req, res) {
+  try {
+    const { id } = req.params;
+    const enrollments = await Enrollment.findAll({
+      where: {
+        user_id: id,
+        completed_at: { [Op.not]: null },
+      },
+      attributes: [
+        'id',
+        'course_id',
+        'user_id',
+        'last_access',
+        'price',
+        'rating',
+        'review',
+        'completed_at',
+        'createdAt',
+        'updatedAt',
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM EnrollmentLessons WHERE EnrollmentLessons.enrollment_id = Enrollment.id AND EnrollmentLessons.completed_at IS NOT NULL)`,
+          ),
+          'total_lesson_completed',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
+          ),
+          'total_lesson',
+        ],
+      ],
+      include: [
+        {
+          model: models.Course,
+          as: 'course',
+          required: true,
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              required: true,
+            },
+          ],
+        },
+        {
+          model: models.EnrollmentLesson,
+          as: 'enrollment_lessons',
+          attributes: [],
+        },
+      ],
+      order: [['id', 'DESC']],
+    });
+
+    return res
+      .status(200)
+      .json({ message: 'Enrollments fetched successfully', enrollments });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: 'Error fetching enrollments', error: error.message });
+  }
+}
+async function getByCourseWithUserEnrollmentLessons(req, res) {
+  try {
+    const { course_id } = req.params;
+
+    const enrollments = await Enrollment.findAll({
+      where: { course_id },
+      attributes: [
+        'id',
+        'course_id',
+        'user_id',
+        'last_access',
+        'price',
+        'rating',
+        'review',
+        'completed_at',
+        'createdAt',
+        'updatedAt',
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM EnrollmentLessons WHERE EnrollmentLessons.enrollment_id = Enrollment.id AND EnrollmentLessons.completed_at IS NOT NULL)`,
+          ),
+          'total_lesson_completed',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
+          ),
+          'total_lesson',
+        ],
+      ],
+      include: [
+        {
+          model: User,
+          as: 'user',
+        },
+        {
+          model: EnrollmentLesson,
+          as: 'enrollment_lessons', // alias phải đúng trong define
+        },
+      ],
+    });
+    return res.status(200).json({
+      message: 'Get enrollments with lessons by course successfully',
+      enrollments,
+    });
+  } catch (error) {
+    console.error('Error getting enrollments with lessons:', error);
+    return res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+}
 
 module.exports = {
   index,
@@ -869,8 +955,9 @@ module.exports = {
   getById_withCourse,
   getMyInProgressEnrollments,
   getMyCompletedEnrollments,
-  getByCourseWithUserEnrollmentLessons,
   updateEnrollment_with_rating_review,
   getEnrollmentByUserId_JWT,
   getByUserId_JWT,
+  getByUserWithCourseAndCategory,
+  getByCourseWithUserEnrollmentLessons,
 };
