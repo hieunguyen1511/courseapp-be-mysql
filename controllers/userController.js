@@ -275,6 +275,7 @@ async function login(req, res) {
         grantType: 'access_token',
         username: user.username,
         userId: user.id,
+        birth: user.birth,
         role: user.role,
         fullname: user.fullname,
         email: user.email,
@@ -600,6 +601,108 @@ async function logout(req, res) {
   }
 }
 
+async function getUserInformationByJWT(req, res) {
+  try {
+    const { userId } = req.userData;
+    console.log(userId);
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    return res.status(200).json({
+      message: 'Get user information successfully',
+      user: {
+        id: user.id,
+        username: user.username,
+        fullname: user.fullname,
+        email: user.email,
+        birth: user.birth,
+        phone: user.phone,
+        avatar: user.avatar,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    });
+  } catch (error) {
+    console.error('Error getting user information:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+async function updateUserInfo_JWT(req, res) {
+  try {
+    const { userId } = req.userData;
+    const { fullname, birth, phone } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    const schema = {
+      fullname: { type: 'string', required: true, max: 50 },
+      birth: { type: 'string', required: true },
+      phone: { type: 'string', required: true, max: 12 },
+    };
+    const validate = v.validate({ fullname, birth, phone }, schema);
+    if (validate !== true)
+      return res
+        .status(400)
+        .json({ message: 'Validation failed', error: validate });
+    user.fullname = fullname;
+    user.birth = birth;
+    user.phone = phone;
+    await user.save();
+    return res.status(200).json({ message: 'User updated successfully', user });
+  } catch (error) {
+    console.error('Error getting user information:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+async function updateAvatar_JWT(req, res) {
+  try {
+    const { userId } = req.userData;
+    const { avatar } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.avatar = avatar;
+    await user.save();
+    return res.status(200).json({ message: 'User updated successfully', user });
+  } catch (error) {
+    console.error('Error getting user information:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+async function changePassword_JWT(req, res) {
+  try {
+    const { userId } = req.userData;
+    const { old_password, password } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const passwordMatch = await bcrypt.compare(old_password, user.password);
+    if (!passwordMatch)
+      return res.status(400).json({ message: 'Old password is incorrect' });
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+    return res.status(200).json({ message: 'User updated successfully', user });
+  } catch (error) {
+    console.error('Error getting user information:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
 module.exports = {
   index,
   getAll,
@@ -610,4 +713,8 @@ module.exports = {
   remove,
   refreshToken,
   logout,
+  getUserInformationByJWT,
+  updateUserInfo_JWT,
+  updateAvatar_JWT,
+  changePassword_JWT,
 };

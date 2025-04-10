@@ -12,4 +12,13 @@ router.put('/update/:id', checkAuth, userController.update);
 router.delete('/remove/:id', checkAuth, userController.remove);
 router.post('/refresh-token', userController.refreshToken);
 router.post('/logout', userController.logout);
+router.get(
+  '/getUserInformationByJWT',
+  checkAuth,
+  userController.getUserInformationByJWT,
+);
+router.put('/updateUserInfo_JWT', checkAuth, userController.updateUserInfo_JWT);
+router.put('/updateAvatar_JWT', checkAuth, userController.updateAvatar_JWT);
+router.put('/changePassword', checkAuth, userController.changePassword_JWT);
+
 module.exports = router;
