@@ -3,6 +3,7 @@ const { resource } = require('../app');
 const models = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { where } = require('sequelize');
 const User = models.User;
 const UserToken = models.UserToken;
 const v = new Validator();
@@ -703,6 +704,24 @@ async function changePassword_JWT(req, res) {
   }
 }
 
+async function getAllUsersWithoutAdmin(req, res) {
+  try {
+    const users = await User.findAll({
+      where: { role: 1 },
+      include: ['enrollments', 'comments'],
+    });
+    return res.status(200).json({
+      message: 'Get all users successfully',
+      users,
+    });
+  } catch (error) {
+    console.error('Get users error:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
 module.exports = {
   index,
   getAll,
@@ -717,4 +736,5 @@ module.exports = {
   updateUserInfo_JWT,
   updateAvatar_JWT,
   changePassword_JWT,
+  getAllUsersWithoutAdmin,
 };

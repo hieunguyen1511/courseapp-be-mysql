@@ -8,6 +8,11 @@ router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.get('/all', checkAuth, userController.getAll);
 router.get('/get/:id', checkAuth, userController.getById);
+router.get(
+  '/getAllUsersWithoutAdmin',
+  checkAuth,
+  userController.getAllUsersWithoutAdmin,
+);
 router.put('/update/:id', checkAuth, userController.update);
 router.delete('/remove/:id', checkAuth, userController.remove);
 router.post('/refresh-token', userController.refreshToken);
@@ -20,5 +25,4 @@ router.get(
 router.put('/updateUserInfo_JWT', checkAuth, userController.updateUserInfo_JWT);
 router.put('/updateAvatar_JWT', checkAuth, userController.updateAvatar_JWT);
 router.put('/changePassword', checkAuth, userController.changePassword_JWT);
-
 module.exports = router;
