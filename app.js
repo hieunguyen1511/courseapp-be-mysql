@@ -16,6 +16,7 @@ const answerRouter = require('./routes/answer');
 const commentRouter = require('./routes/comment');
 const enrollmentRouter = require('./routes/enrollment');
 const paymentRouter = require('./routes/payment');
+const statisticsRouter = require('./routes/statistics');
 app.use(bodyParser.json());
 
 app.use('/api/user', userRouter);
@@ -28,6 +29,8 @@ app.use('/api/answer', answerRouter);
 app.use('/api/comment', commentRouter);
 app.use('/api/enrollment', enrollmentRouter);
 app.use('/api/payment', paymentRouter);
+
+app.use('/api/statistics', statisticsRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello .... from course app');

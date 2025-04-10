@@ -848,12 +848,6 @@ async function getByUserWithCourseAndCategory(req, res) {
         'updatedAt',
         [
           Sequelize.literal(
-            `(SELECT COUNT(*) FROM EnrollmentLessons WHERE EnrollmentLessons.enrollment_id = Enrollment.id AND EnrollmentLessons.completed_at IS NOT NULL)`,
-          ),
-          'total_lesson_completed',
-        ],
-        [
-          Sequelize.literal(
             `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
           ),
           'total_lesson',
@@ -907,12 +901,6 @@ async function getByCourseWithUserEnrollmentLessons(req, res) {
         'completed_at',
         'createdAt',
         'updatedAt',
-        [
-          Sequelize.literal(
-            `(SELECT COUNT(*) FROM EnrollmentLessons WHERE EnrollmentLessons.enrollment_id = Enrollment.id AND EnrollmentLessons.completed_at IS NOT NULL)`,
-          ),
-          'total_lesson_completed',
-        ],
         [
           Sequelize.literal(
             `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
