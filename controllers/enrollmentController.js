@@ -438,6 +438,13 @@ async function getByUserId_JWT(req, res) {
           model: models.Course,
           as: 'course',
           required: true,
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              required: true,
+            },
+          ],
         },
       ],
       where: { user_id: userId },
