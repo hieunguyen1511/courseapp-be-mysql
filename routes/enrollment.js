@@ -52,4 +52,24 @@ router.get(
   checkAuth,
   enrollmentController.getByUserWithCourseAndCategory,
 );
+router.get(
+  '/get_last_access_enrollment',
+  checkAuth,
+  enrollmentController.get_last_access_enrollment,
+);
+router.get(
+  '/getMyCompletedEnrollments_limit_info',
+  checkAuth,
+  enrollmentController.getMyCompletedEnrollments_limit_info,
+);
+router.get(
+  '/getMyInProgressEnrollments_limit_info',
+  checkAuth,
+  enrollmentController.getMyInProgressEnrollments_limit_info,
+);
+router.get(
+  '/getById_limit_info/:id',
+  checkAuth,
+  enrollmentController.getById_limit_info,
+);
 module.exports = router;

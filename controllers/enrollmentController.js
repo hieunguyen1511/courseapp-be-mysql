@@ -1,12 +1,13 @@
 const Validator = require('fastest-validator');
 const { resource } = require('../app');
 const models = require('../models');
-const { Op, Sequelize } = require('sequelize');
+const { Op, Sequelize, where } = require('sequelize');
 
 const Enrollment = models.Enrollment;
 const User = models.User;
 const EnrollmentLesson = models.EnrollmentLesson;
-const lesson = models.lesson;
+const Section = models.Section;
+const lesson = models.Lesson;
 const v = new Validator();
 
 const USER_ROLE = {
@@ -438,6 +439,13 @@ async function getByUserId_JWT(req, res) {
           model: models.Course,
           as: 'course',
           required: true,
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              required: true,
+            },
+          ],
         },
       ],
       where: { user_id: userId },
@@ -793,6 +801,15 @@ async function updateEnrollment_with_rating_review(req, res) {
       review,
     });
 
+    const totalRating = await Enrollment.sum('rating', {
+      where: { course_id: enrollment.course_id, rating: { [Op.not]: null } },
+    });
+    const totalEnrollment = await Enrollment.count({
+      where: { course_id: enrollment.course_id, rating: { [Op.not]: null } },
+    });
+    const course = await models.Course.findByPk(enrollment.course_id);
+    course.total_rating = totalRating / totalEnrollment;
+    await course.save();
     return res
       .status(200)
       .json({ message: 'Enrollment updated successfully', enrollment });
@@ -932,6 +949,330 @@ async function getByCourseWithUserEnrollmentLessons(req, res) {
   }
 }
 
+async function get_last_access_enrollment(req, res) {
+  try {
+    const { userId } = req.userData;
+    const enrollments = await Enrollment.findAll({
+      include: [
+        {
+          model: models.Course,
+          as: 'course',
+          required: true,
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              required: true,
+            },
+          ],
+        },
+      ],
+      where: { user_id: userId },
+      order: [['last_access', 'DESC']],
+      limit: 1,
+    });
+
+    const total_lesson_completed = await EnrollmentLesson.count({
+      where: {
+        enrollment_id: enrollments[0].id,
+        completed_at: { [Op.not]: null },
+      },
+    });
+    // Count total lessons in the course
+    console.log('total', total_lesson_completed);
+    const total_lesson = await Section.findAll({
+      where: [{ course_id: enrollments[0].course_id }],
+      include: [
+        {
+          model: lesson,
+          as: 'lessons',
+        },
+      ],
+    });
+    const total_lesson_count = total_lesson.reduce(
+      (acc, section) => acc + section.lessons.length,
+      0,
+    );
+    console.log('total_lesson', total_lesson_count);
+    return res.status(200).json({
+      message: `Get enrollments by user successfully`,
+      enrollment: {
+        enrollmentId: enrollments[0].id,
+        courseId: enrollments[0].course_id,
+        categoryId: enrollments[0].course.category.id,
+        name: enrollments[0].course.name,
+        description: enrollments[0].course.description,
+        progress: (total_lesson_completed / total_lesson_count) * 100,
+        image: enrollments[0].course.image,
+        last_accessed: enrollments[0].last_access,
+      },
+    });
+  } catch (error) {
+    console.error('Error getting enrollments by user:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+async function getMyInProgressEnrollments_limit_info(req, res) {
+  try {
+    const { userId } = req.userData;
+    const enrollments = await Enrollment.findAll({
+      where: {
+        user_id: userId,
+        completed_at: { [Op.eq]: null },
+      },
+      attributes: [
+        'id',
+        'course_id',
+        'user_id',
+        'last_access',
+        'price',
+        'rating',
+        'review',
+        'completed_at',
+        'createdAt',
+        'updatedAt',
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM EnrollmentLessons WHERE EnrollmentLessons.enrollment_id = Enrollment.id AND EnrollmentLessons.completed_at IS NOT NULL)`,
+          ),
+          'total_lesson_completed',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
+          ),
+          'total_lesson',
+        ],
+      ],
+      include: [
+        {
+          model: models.Course,
+          as: 'course',
+          required: true,
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              required: true,
+            },
+          ],
+        },
+      ],
+      order: [['id', 'DESC']],
+    });
+    //console.log('enrollments', enrollments[0].get('total_lesson'));
+    const mappdata = await enrollments.map((enrollment) => {
+      return {
+        enrollmentId: enrollment.id,
+        courseId: enrollment.course_id,
+        categoryId: enrollment.course.category.id,
+        name: enrollment.course.name,
+        categoryName: enrollment.course.category.name,
+        description: enrollment.course.description,
+        image: enrollment.course.image,
+        total_lesson_completed: enrollment.get('total_lesson_completed'),
+        total_lesson: enrollment.get('total_lesson'),
+        progress:
+          (enrollment.get('total_lesson_completed') /
+            enrollment.get('total_lesson')) *
+          100,
+        last_access: enrollment.last_access,
+      };
+    });
+
+    return res.status(200).json({
+      message: 'Enrollments fetched successfully',
+      enrollments: mappdata,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: 'Error fetching enrollments', error: error.message });
+  }
+}
+async function getMyCompletedEnrollments_limit_info(req, res) {
+  try {
+    const { userId } = req.userData;
+    const enrollments = await Enrollment.findAll({
+      where: {
+        user_id: userId,
+        completed_at: { [Op.not]: null },
+      },
+      attributes: [
+        'id',
+        'course_id',
+        'user_id',
+        'last_access',
+        'price',
+        'rating',
+        'review',
+        'completed_at',
+        'createdAt',
+        'updatedAt',
+      ],
+      include: [
+        {
+          model: models.Course,
+          as: 'course',
+          required: true,
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              required: true,
+            },
+          ],
+        },
+        {
+          model: models.EnrollmentLesson,
+          as: 'enrollment_lessons',
+          attributes: [],
+        },
+      ],
+      order: [['id', 'DESC']],
+    });
+    const mappdata = await enrollments.map((enrollment) => {
+      return {
+        enrollmentId: enrollment.id,
+        courseId: enrollment.course_id,
+        categoryId: enrollment.course.category.id,
+        name: enrollment.course.name,
+        categoryName: enrollment.course.category.name,
+        description: enrollment.course.description,
+        image: enrollment.course.image,
+        rating: enrollment.rating,
+        completed_at: enrollment.completed_at,
+      };
+    });
+    return res.status(200).json({
+      message: 'Enrollments fetched successfully',
+      enrollments: mappdata,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: 'Error fetching enrollments', error: error.message });
+  }
+}
+
+async function getById_limit_info(req, res) {
+  try {
+    const { id } = req.params;
+    const enrollment = await Enrollment.findByPk(id, {
+      attributes: ['id', 'course_id', 'user_id', 'rating', 'last_access'],
+      include: [
+        {
+          model: models.Course,
+          as: 'course',
+          required: true,
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: models.Category,
+              as: 'category',
+              required: true,
+              attributes: ['id', 'name'],
+            },
+            {
+              model: models.Section,
+              as: 'sections',
+              attributes: ['id', 'name'],
+              include: [
+                {
+                  model: models.Lesson,
+                  as: 'lessons',
+                  attributes: ['id', 'title'],
+                  order: [['id', 'ASC']],
+                },
+              ],
+            },
+            {
+              model: models.Comments,
+              as: 'comments',
+              attributes: [
+                'id',
+                'user_id',
+                'course_id',
+                'content',
+                'parent_id',
+                'createdAt',
+              ],
+              include: [
+                {
+                  model: models.User,
+                  as: 'user',
+                  attributes: ['id', 'fullname', 'avatar', 'role'],
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: models.EnrollmentLesson,
+          as: 'enrollment_lessons',
+          attributes: ['lesson_id', 'completed_at'],
+        },
+      ],
+    });
+
+    if (!enrollment) {
+      return res.status(404).json({ message: 'Enrollment not found' });
+    }
+
+    Enrollment.update(
+      {
+        last_access: new Date(),
+      },
+      {
+        where: {
+          id: id,
+        },
+      },
+    );
+
+    // const mappdata = await enrollment.map((enrollment) => {
+    //   return {
+    //     enrollmentId: enrollment.id,
+    //     courseId: enrollment.course_id,
+    //     categoryId: enrollment.course.category.id,
+    //     name: enrollment.course.name,
+    //     categoryName: enrollment.course.category.name,
+    //     description: enrollment.course.description,
+    //     course: {
+    //       name: enrollment.course.name,
+    //       categoryName: enrollment.course.category.name,
+    //       sections: enrollment.course.sections.map((section) => {
+    //         return {
+    //           sectionId: section.id,
+    //           sectionName: section.name,
+    //           lessons: section.lessons.map((lesson) => {
+    //             return {
+    //               lessonId: lesson.id,
+    //               lessonTitle: lesson.title,
+    //             };
+    //           }),
+    //         };
+    //       }),
+    //     },
+    //   };
+    // });
+    //console.log('mappdata', mappdata);
+    return res.status(200).json({
+      message: `Get enrollment by ID successfully`,
+      enrollment,
+    });
+  } catch (error) {
+    console.error('Error getting enrollment by ID:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
 module.exports = {
   index,
   getById,
@@ -948,4 +1289,8 @@ module.exports = {
   getByUserId_JWT,
   getByUserWithCourseAndCategory,
   getByCourseWithUserEnrollmentLessons,
+  get_last_access_enrollment,
+  getMyCompletedEnrollments_limit_info,
+  getMyInProgressEnrollments_limit_info,
+  getById_limit_info,
 };

@@ -610,7 +610,6 @@ async function getSuggestedCourses(req, res) {
  *                   type: string
  */
 
-
 async function create(req, res) {
   try {
     const {
@@ -949,6 +948,168 @@ async function getCourseById_withCountEnrollment(req, res) {
   }
 }
 
+async function getCourseByReferenceCategoryId_limit_info(req, res) {
+  // category_id or NaN
+  try {
+    const category_id = parseInt(req.params.id);
+    console.log(category_id);
+    if (!category_id) {
+      console.log('category_id is NaN');
+      const course = await Course.findAll({
+        where: {
+          status: 1,
+        },
+        order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: Category,
+            attributes: ['id', 'name'],
+            as: 'category',
+          },
+        ],
+      });
+      if (!course) return res.status(404).json({ message: 'Course not found' });
+
+      const courses = course.map((course) => ({
+        courseId: course.id,
+        categoryId: course.category_id,
+        name: course.name,
+        description: course.description,
+        categoryName: course.category.name,
+        price: course.price,
+        discount: course.discount,
+        image: course.image,
+        rating: course.total_rating,
+      }));
+
+      return res.status(200).json({
+        message: `Get course by reference ID successfully`,
+        courses,
+      });
+    } else {
+      console.log('category_id is number');
+      const course = await Course.findAll({
+        where: {
+          category_id: category_id,
+          status: 1,
+        },
+        order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: Category,
+            attributes: ['id', 'name'],
+            as: 'category',
+          },
+        ],
+      });
+      if (!course) return res.status(404).json({ message: 'Course not found' });
+      const courses = course.map((course) => ({
+        courseId: course.id,
+        categoryId: course.category_id,
+        name: course.name,
+        description: course.description,
+        categoryName: course.category.name,
+        price: course.price,
+        discount: course.discount,
+        image: course.image,
+        rating: course.total_rating,
+      }));
+      return res.status(200).json({
+        message: `Get course by reference ID successfully`,
+        courses,
+      });
+    }
+  } catch (error) {
+    console.error('Error getting course by reference ID:', error);
+    return res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+}
+
+async function get_all_active_course_for_user_limit_info(req, res) {
+  try {
+    const courses = await Course.findAll({
+      where: {
+        status: 1,
+      },
+      include: [
+        {
+          model: Category,
+          attributes: ['id', 'name'],
+          as: 'category',
+        },
+      ],
+      group: ['Course.id', 'category.id'],
+    });
+    if (!courses) return res.status(404).json({ message: 'Course not found' });
+    const mapdata = courses.map((course) => ({
+      courseId: course.id,
+      categoryId: course.category_id,
+      name: course.name,
+      description: course.description,
+      categoryName: course.category.name,
+      price: course.price,
+      discount: course.discount,
+      image: course.image,
+      rating: course.total_rating,
+    }));
+    return res.status(200).json({
+      message: 'Get all courses successfully',
+      courses: mapdata,
+    });
+  } catch (error) {
+    console.error('Error getting all courses:', error);
+    return res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+}
+
+async function searchCoursesByKeyword(req, res) {
+  try {
+    const { keyword } = req.query;
+
+    const courses = await Course.findAll({
+      where: {
+        name: {
+          [Sequelize.Op.like]: `%${keyword}%`,
+        },
+      },
+      include: [
+        {
+          model: Category,
+          attributes: ['id', 'name'],
+          as: 'category',
+        },
+      ],
+    });
+    const mappdata = await courses.map((course) => ({
+      courseId: course.id,
+      categoryId: course.category_id,
+      name: course.name,
+      description: course.description,
+      categoryName: course.category.name,
+      price: course.price,
+      discount: course.discount,
+      image: course.image,
+      rating: course.total_rating,
+    }));
+    return res.status(200).json({
+      message: 'Get courses by keyword successfully',
+      courses: mappdata,
+    });
+  } catch (error) {
+    console.error('Error searching courses:', error);
+    return res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   index,
   getAll,
@@ -962,4 +1123,7 @@ module.exports = {
   getCourseById_withCountEnrollment,
   getSuggestedCourses,
   getPopularCourses,
+  getCourseByReferenceCategoryId_limit_info,
+  get_all_active_course_for_user_limit_info,
+  searchCoursesByKeyword,
 };

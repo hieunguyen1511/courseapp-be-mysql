@@ -1,6 +1,7 @@
 const express = require('express');
 const { checkAuth } = require('../middleware/check-auth');
 const courseController = require('../controllers/courseController');
+const { route } = require('./user');
 
 const router = express.Router();
 
@@ -24,5 +25,17 @@ router.get(
   checkAuth,
   courseController.getCourseById_withCountEnrollment,
 );
+router.get(
+  '/getCourseByReferenceCategoryId_limit_info/:id',
+  checkAuth,
+  courseController.getCourseByReferenceCategoryId_limit_info,
+);
+router.get(
+  '/get_all_active_course_for_user_limit_info',
+  checkAuth,
+  courseController.get_all_active_course_for_user_limit_info,
+);
+
+router.get('/search', checkAuth, courseController.searchCoursesByKeyword);
 
 module.exports = router;
