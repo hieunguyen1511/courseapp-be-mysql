@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
 
       // Enrollment có nhiều EnrollmentLesson
       Enrollment.hasMany(models.EnrollmentLesson, {
-        foreignKey: 'enrollment_id',
         as: 'enrollment_lessons',
+        foreignKey: 'enrollment_id',
       });
     }
   }

@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
       // EnrollmentLesson thuộc về Enrollment
       EnrollmentLesson.belongsTo(models.Enrollment, {
         foreignKey: 'enrollment_id',
-        as: 'enrollment',
       });
 
       // EnrollmentLesson thuộc về Lesson

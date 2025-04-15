@@ -2,12 +2,13 @@ const Validator = require('fastest-validator');
 const { resource } = require('../app');
 const models = require('../models');
 const { Op, Sequelize, where } = require('sequelize');
+const { raw } = require('body-parser');
 
 const Enrollment = models.Enrollment;
 const User = models.User;
 const EnrollmentLesson = models.EnrollmentLesson;
 const Section = models.Section;
-const lesson = models.Lesson;
+const Lesson = models.Lesson;
 const v = new Validator();
 
 const USER_ROLE = {
@@ -864,7 +865,7 @@ async function getByUserWithCourseAndCategory(req, res) {
         'updatedAt',
         [
           Sequelize.literal(
-            `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
+            `(SELECT COUNT(*) FROM lessons WHERE lessons.section_id IN (SELECT id FROM sections WHERE sections.course_id = Enrollment.course_id))`,
           ),
           'total_lesson',
         ],
@@ -885,10 +886,11 @@ async function getByUserWithCourseAndCategory(req, res) {
         {
           model: models.EnrollmentLesson,
           as: 'enrollment_lessons',
-          attributes: [],
         },
       ],
       order: [['id', 'DESC']],
+      raw: false,
+      nest: true,
     });
 
     return res
@@ -900,6 +902,7 @@ async function getByUserWithCourseAndCategory(req, res) {
       .json({ message: 'Error fetching enrollments', error: error.message });
   }
 }
+
 async function getByCourseWithUserEnrollmentLessons(req, res) {
   try {
     const { course_id } = req.params;
@@ -926,11 +929,11 @@ async function getByCourseWithUserEnrollmentLessons(req, res) {
       ],
       include: [
         {
-          model: User,
+          model: models.User,
           as: 'user',
         },
         {
-          model: EnrollmentLesson,
+          model: models.EnrollmentLesson,
           as: 'enrollment_lessons', // alias phải đúng trong define
         },
       ],
