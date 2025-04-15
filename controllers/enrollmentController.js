@@ -850,7 +850,6 @@ async function getByUserWithCourseAndCategory(req, res) {
     const enrollments = await Enrollment.findAll({
       where: {
         user_id: id,
-        completed_at: { [Op.not]: null },
       },
       attributes: [
         'id',
