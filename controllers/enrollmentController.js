@@ -986,7 +986,7 @@ async function get_last_access_enrollment(req, res) {
       where: [{ course_id: enrollments[0].course_id }],
       include: [
         {
-          model: lesson,
+          model: models.Lesson,
           as: 'lessons',
         },
       ],
