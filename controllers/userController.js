@@ -8,6 +8,8 @@ const User = models.User;
 const UserToken = models.UserToken;
 const v = new Validator();
 
+const UserOTP = models.UserOTP;
+
 //const passwordHash = require('password-hash');
 function Hash(password) {
   return passwordHash.generate(password);
@@ -722,6 +724,114 @@ async function getAllUsersWithoutAdmin(req, res) {
   }
 }
 
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+async function sendOTP(req, res) {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const expirationTime = new Date(Date.now() + 10 * 60 * 1000); // 10 phút
+
+    const userOTP = await UserOTP.findOne({ where: { user_id: user.id } });
+    if (userOTP) {
+      await UserOTP.update(
+        { otp, expration_time: expirationTime, is_verified: false },
+        { where: { user_id: user.id } },
+      );
+    } else {
+      await UserOTP.create({
+        user_id: user.id,
+        otp,
+        expration_time: expirationTime,
+      });
+    }
+
+    // send OTP
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: 'Mã xác thực OTP COURSE MANAGEMENT APP',
+      text: `Mã OTP của bạn là ${otp}. Nó sẽ hết hạn trong 10 phút.`,
+    };
+    const sendMail = async (transporter, mailOptions) => {
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully');
+        return { success: true };
+      } catch (error) {
+        console.error('Error sending email:', error);
+        return { success: false, error: error.message };
+      }
+    };
+
+    const result = await sendMail(transporter, mailOptions);
+    if (!result.success) {
+      return res.status(500).json({
+        message: 'Error sending email',
+        error: result.error,
+      });
+    }
+
+    return res.status(200).json({
+      message: 'OTP sent successfully',
+    });
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+async function verifyOTP(req, res) {
+  try {
+    const { email, otp } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const userOTP = await UserOTP.findOne({ where: { user_id: user.id } });
+    if (!userOTP) {
+      return res.status(404).json({ message: 'OTP not found' });
+    }
+    if (userOTP.is_verified) {
+      return res.status(400).json({ message: 'OTP already verified' });
+    }
+    if (userOTP.otp !== otp) {
+      return res.status(400).json({ message: 'Invalid OTP' });
+    }
+    const currentTime = new Date();
+    if (currentTime > userOTP.expration_time) {
+      return res.status(400).json({ message: 'OTP expired' });
+    }
+    await UserOTP.update(
+      { is_verified: true },
+      { where: { user_id: user.id } },
+    );
+
+    return res.status(200).json({ message: 'OTP verified successfully' });
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
 module.exports = {
   index,
   getAll,
@@ -737,4 +847,6 @@ module.exports = {
   updateAvatar_JWT,
   changePassword_JWT,
   getAllUsersWithoutAdmin,
+  sendOTP,
+  verifyOTP,
 };
