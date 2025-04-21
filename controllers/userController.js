@@ -823,9 +823,33 @@ async function verifyOTP(req, res) {
       { where: { user_id: user.id } },
     );
 
-    return res.status(200).json({ message: 'OTP verified successfully' });
+    return res
+      .status(200)
+      .json({ message: 'OTP verified successfully', userId: user.id });
   } catch (error) {
     console.error('Error verifying OTP:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
+async function updateUserPassword(req, res) {
+  try {
+    const { userId } = req.userData;
+    const { password } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+    return res.status(200).json({ message: 'User updated successfully', user });
+  } catch (error) {
+    console.error('Error getting user information:', error);
     return res
       .status(500)
       .json({ message: 'Something went wrong', error: error.message });
@@ -849,4 +873,5 @@ module.exports = {
   getAllUsersWithoutAdmin,
   sendOTP,
   verifyOTP,
+  updateUserPassword,
 };

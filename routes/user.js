@@ -28,5 +28,6 @@ router.put('/changePassword', checkAuth, userController.changePassword_JWT);
 
 router.post('/sendOTP', userController.sendOTP);
 router.post('/verifyOTP', userController.verifyOTP);
+router.post('/updateUserPassword', userController.updateUserPassword);
 
 module.exports = router;
