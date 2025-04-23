@@ -836,7 +836,7 @@ async function verifyOTP(req, res) {
 
 async function updateUserPassword(req, res) {
   try {
-    const { userId } = req.userData;
+    const { userId } = req.body;
     const { password } = req.body;
 
     const user = await User.findByPk(userId);
@@ -847,7 +847,7 @@ async function updateUserPassword(req, res) {
 
     user.password = hashedPassword;
     await user.save();
-    return res.status(200).json({ message: 'User updated successfully', user });
+    return res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     console.error('Error getting user information:', error);
     return res
