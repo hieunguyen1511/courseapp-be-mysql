@@ -856,6 +856,72 @@ async function updateUserPassword(req, res) {
   }
 }
 
+async function googleSignIn(req, res) {
+  try {
+    const { email, fullname } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      const username = email.split('@')[0];
+      const checkUser = await User.findOne({ where: { username: username } });
+      if (checkUser)
+        return res.status(400).json({ message: 'Username already exists' });
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(email + salt, salt);
+      const newUser = await User.create({
+        username: username,
+        password: hashedPassword,
+        fullname,
+        email,
+        role: 0,
+      });
+    }
+    const access_token = jwt.sign(
+      {
+        grantType: 'access_token',
+        username: user.username,
+        userId: user.id,
+        role: user.role,
+        fullname: user.fullname,
+        email: user.email,
+      },
+      process.env.JWT_KEY,
+      { expiresIn: '1h' },
+    );
+    const refresh_token = jwt.sign(
+      {
+        grantType: 'refresh_token',
+      },
+      process.env.JWT_KEY,
+      { expiresIn: '7d' },
+    );
+    const userToken = await UserToken.findOne({
+      where: { user_id: user.id },
+    });
+    if (!userToken) {
+      await UserToken.create({
+        user_id: user.id,
+        refresh_token: refresh_token,
+      });
+    } else {
+      await UserToken.update(
+        { refresh_token: refresh_token },
+        { where: { user_id: user.id } },
+      );
+    }
+    return res.status(200).json({
+      message: 'Authentication successful',
+      user,
+      access_token,
+      refresh_token,
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    return res
+      .status(500)
+      .json({ message: 'Something went wrong', error: error.message });
+  }
+}
+
 module.exports = {
   index,
   getAll,
@@ -874,4 +940,5 @@ module.exports = {
   sendOTP,
   verifyOTP,
   updateUserPassword,
+  googleSignIn,
 };

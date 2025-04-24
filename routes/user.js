@@ -30,4 +30,6 @@ router.post('/sendOTP', userController.sendOTP);
 router.post('/verifyOTP', userController.verifyOTP);
 router.post('/updateUserPassword', userController.updateUserPassword);
 
+router.post('/googleSignIn', userController.googleSignIn);
+
 module.exports = router;
