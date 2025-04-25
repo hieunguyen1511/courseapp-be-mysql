@@ -1077,6 +1077,7 @@ async function searchCoursesByKeyword(req, res) {
         name: {
           [Sequelize.Op.like]: `%${keyword}%`,
         },
+        status: 1,
       },
       include: [
         {
