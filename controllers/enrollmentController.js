@@ -431,10 +431,60 @@ async function getByUser(req, res) {
   }
 }
 
+// async function getByUserId_JWT(req, res) {
+//   try {
+//     const { userId } = req.userData;
+//     const enrollments = await Enrollment.findAll({
+//       include: [
+//         {
+//           model: models.Course,
+//           as: 'course',
+//           required: true,
+//           include: [
+//             {
+//               model: models.Category,
+//               as: 'category',
+//               required: true,
+//             },
+//           ],
+//         },
+//       ],
+//       where: { user_id: userId },
+//     });
+
+//     return res
+//       .status(200)
+//       .json({ message: `Get enrollments by user successfully`, enrollments });
+//   } catch (error) {
+//     console.error('Error getting enrollments by user:', error);
+//     return res
+//       .status(500)
+//       .json({ message: 'Something went wrong', error: error.message });
+//   }
+// }
+
 async function getByUserId_JWT(req, res) {
   try {
     const { userId } = req.userData;
     const enrollments = await Enrollment.findAll({
+      attributes: [
+        'id',
+        'course_id',
+        'user_id',
+        'last_access',
+        'price',
+        'rating',
+        'review',
+        'completed_at',
+        'createdAt',
+        'updatedAt',
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
+          ),
+          'total_lesson',
+        ],
+      ],
       include: [
         {
           model: models.Course,
@@ -447,6 +497,10 @@ async function getByUserId_JWT(req, res) {
               required: true,
             },
           ],
+        },
+        {
+          model: models.EnrollmentLesson,
+          as: 'enrollment_lessons',
         },
       ],
       where: { user_id: userId },
