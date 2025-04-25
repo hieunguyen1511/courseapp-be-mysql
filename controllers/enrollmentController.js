@@ -435,6 +435,24 @@ async function getByUserId_JWT(req, res) {
   try {
     const { userId } = req.userData;
     const enrollments = await Enrollment.findAll({
+      attributes: [
+        'id',
+        'course_id',
+        'user_id',
+        'last_access',
+        'price',
+        'rating',
+        'review',
+        'completed_at',
+        'createdAt',
+        'updatedAt',
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM Lessons WHERE Lessons.section_id IN (SELECT id FROM Sections WHERE Sections.course_id = Enrollment.course_id))`,
+          ),
+          'total_lesson',
+        ],
+      ],
       include: [
         {
           model: models.Course,
@@ -447,6 +465,10 @@ async function getByUserId_JWT(req, res) {
               required: true,
             },
           ],
+        },
+        {
+          model: models.EnrollmentLesson,
+          as: 'enrollment_lessons',
         },
       ],
       where: { user_id: userId },
