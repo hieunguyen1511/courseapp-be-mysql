@@ -8,7 +8,7 @@ const v = new Validator();
 const schema = {
   section_id: { type: 'number', required: true },
   title: { type: 'string', required: true, max: 100 },
-  content: { type: 'string', required: true, max: 255 },
+  content: { type: 'string', required: true, max: 3000 },
   is_quizz: { type: 'boolean', required: true },
   video_url: { type: 'string', optional: true, max: 255 },
 };
