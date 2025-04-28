@@ -1028,16 +1028,24 @@ async function get_last_access_enrollment(req, res) {
       limit: 1,
     });
 
+    console.log('enrollments', enrollments);
+    const enrollment_id = enrollments.length !== 0 ? enrollments[0].id : 0;
+    const course_id = enrollments.length !== 0 ? enrollments[0].course_id : 0;
+    const category_id =
+      enrollments.length !== 0 ? enrollments[0].course.category.id : 0;
+    console.log('enrollment_id', enrollment_id);
+    console.log('Course id', course_id);
+
     const total_lesson_completed = await EnrollmentLesson.count({
       where: {
-        enrollment_id: enrollments[0].id,
+        enrollment_id: enrollment_id,
         completed_at: { [Op.not]: null },
       },
     });
     // Count total lessons in the course
     console.log('total', total_lesson_completed);
     const total_lesson = await Section.findAll({
-      where: [{ course_id: enrollments[0].course_id }],
+      where: [{ course_id: course_id }],
       include: [
         {
           model: models.Lesson,
@@ -1050,19 +1058,26 @@ async function get_last_access_enrollment(req, res) {
       0,
     );
     console.log('total_lesson', total_lesson_count);
-    return res.status(200).json({
-      message: `Get enrollments by user successfully`,
-      enrollment: {
-        enrollmentId: enrollments[0].id,
-        courseId: enrollments[0].course_id,
-        categoryId: enrollments[0].course.category.id,
-        name: enrollments[0].course.name,
-        description: enrollments[0].course.description,
-        progress: (total_lesson_completed / total_lesson_count) * 100,
-        image: enrollments[0].course.image,
-        last_accessed: enrollments[0].last_access,
-      },
-    });
+    if (enrollments.length !== 0) {
+      return res.status(200).json({
+        message: `Get enrollments by user successfully`,
+        enrollment: {
+          enrollmentId: enrollment_id,
+          courseId: course_id,
+          categoryId: category_id,
+          name: enrollments[0].course.name,
+          description: enrollments[0].course.description,
+          progress: (total_lesson_completed / total_lesson_count) * 100,
+          image: enrollments[0].course.image,
+          last_accessed: enrollments[0].last_access,
+        },
+      });
+    } else {
+      return res.status(200).json({
+        message: `Get enrollments by user successfully`,
+        enrollment: {},
+      });
+    }
   } catch (error) {
     console.error('Error getting enrollments by user:', error);
     return res
