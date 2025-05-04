@@ -22,7 +22,12 @@ async function createPayment(req, res) {
       .json({ error: 'You have already enrolled in this course' });
   }
 
-  const priceInVND = course.price;
+  let priceInVND = course.price;
+
+  if (course.discount > 0) {
+    const discount = (course.discount / 100) * course.price;
+    priceInVND = course.price - discount;
+  }
 
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
@@ -70,6 +75,7 @@ async function processPayment(req, res) {
   const enrollment = await Enrollment.create({
     user_id,
     course_id,
+    price: paymentIntent.amount,
   });
 
   res
