@@ -859,22 +859,24 @@ async function updateUserPassword(req, res) {
 async function googleSignIn(req, res) {
   try {
     const { email, fullname } = req.body;
-    const user = await User.findOne({ where: { email } });
+    let user = await User.findOne({ where: { email } });
     if (!user) {
       const username = email.split('@')[0];
+      console.log('username', username);
       const checkUser = await User.findOne({ where: { username: username } });
       if (checkUser)
         return res.status(400).json({ message: 'Username already exists' });
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(email + salt, salt);
-      const newUser = await User.create({
+      await User.create({
         username: username,
         password: hashedPassword,
         fullname,
         email,
-        role: 0,
+        role: 1,
       });
     }
+    user = await User.findOne({ where: { email } });
     const access_token = jwt.sign(
       {
         grantType: 'access_token',
