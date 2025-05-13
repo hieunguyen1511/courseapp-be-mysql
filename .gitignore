@@ -4,8 +4,7 @@ node_modules/
 # dist folder
 dist/
 
-# config files
-config/
+
 
 # Environment variables
 .env
